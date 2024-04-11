@@ -2,8 +2,8 @@ package com.springboot.webpush.controller.model;
 
 public class PushKey {
 	private String endpoint;
-	private String key;
-	private String auth;
+	private Integer expriationTime;
+	private Key keys;
 
 	/**
 	 * @return the endpoint
@@ -20,31 +20,31 @@ public class PushKey {
 	}
 
 	/**
-	 * @return the key
+	 * @return the expriationTime
 	 */
-	public String getKey() {
-		return key;
+	public Integer getExpriationTime() {
+		return expriationTime;
 	}
 
 	/**
-	 * @param key the key to set
+	 * @param expriationTime the expriationTime to set
 	 */
-	public void setKey(final String key) {
-		this.key = key;
+	public void setExpriationTime(final Integer expriationTime) {
+		this.expriationTime = expriationTime;
 	}
 
 	/**
-	 * @return the auth
+	 * @return the keys
 	 */
-	public String getAuth() {
-		return auth;
+	public Key getKeys() {
+		return keys;
 	}
 
 	/**
-	 * @param auth the auth to set
+	 * @param keys the keys to set
 	 */
-	public void setAuth(final String auth) {
-		this.auth = auth;
+	public void setKeys(final Key keys) {
+		this.keys = keys;
 	}
 
 }

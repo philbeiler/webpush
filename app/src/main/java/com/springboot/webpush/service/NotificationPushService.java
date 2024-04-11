@@ -64,7 +64,8 @@ public class NotificationPushService {
 		if (pushkey == null) {
 			throw new PushkeyNotFoundException();
 		}
-		return new Subscription(pushkey.getEndpoint(), new Subscription.Keys(pushkey.getKey(), pushkey.getAuth()));
+		return new Subscription(pushkey.getEndpoint(),
+				new Subscription.Keys(pushkey.getKeys().getP256dh(), pushkey.getKeys().getAuth()));
 	}
 
 }

@@ -1,13 +1,5 @@
 package com.springboot.webpush.impl;
 
-import org.bouncycastle.jce.ECNamedCurveTable;
-import org.bouncycastle.jce.interfaces.ECPublicKey;
-import org.bouncycastle.jce.spec.ECNamedCurveParameterSpec;
-import org.jose4j.jws.AlgorithmIdentifiers;
-import org.jose4j.jws.JsonWebSignature;
-import org.jose4j.jwt.JwtClaims;
-import org.jose4j.lang.JoseException;
-
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.InvalidAlgorithmParameterException;
@@ -23,313 +15,336 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bouncycastle.jce.ECNamedCurveTable;
+import org.bouncycastle.jce.interfaces.ECPublicKey;
+import org.bouncycastle.jce.spec.ECNamedCurveParameterSpec;
+import org.jose4j.jws.AlgorithmIdentifiers;
+import org.jose4j.jws.JsonWebSignature;
+import org.jose4j.jwt.JwtClaims;
+import org.jose4j.lang.JoseException;
+
 public abstract class AbstractPushService<T extends AbstractPushService<T>> {
-    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
-    public static final String SERVER_KEY_ID = "server-key-id";
-    public static final String SERVER_KEY_CURVE = "P-256";
+	private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+	public static final String SERVER_KEY_ID = "server-key-id";
+	public static final String SERVER_KEY_CURVE = "P-256";
 
-    /**
-     * The Google Cloud Messaging API key (for pre-VAPID in Chrome)
-     */
-    private String gcmApiKey;
+	/**
+	 * The Google Cloud Messaging API key (for pre-VAPID in Chrome)
+	 */
+	private String gcmApiKey;
 
-    /**
-     * Subject used in the JWT payload (for VAPID). When left as null, then no subject will be used
-     * (RFC-8292 2.1 says that it is optional)
-     */
-    private String subject;
+	/**
+	 * Subject used in the JWT payload (for VAPID). When left as null, then no
+	 * subject will be used (RFC-8292 2.1 says that it is optional)
+	 */
+	private String subject;
 
-    /**
-     * The public key (for VAPID)
-     */
-    private PublicKey publicKey;
+	/**
+	 * The public key (for VAPID)
+	 */
+	private PublicKey publicKey;
 
-    /**
-     * The private key (for VAPID)
-     */
-    private PrivateKey privateKey;
+	/**
+	 * The private key (for VAPID)
+	 */
+	private PrivateKey privateKey;
 
-    public AbstractPushService() {
-    }
+	public AbstractPushService() {
+	}
 
-    public AbstractPushService(String gcmApiKey) {
-        this.gcmApiKey = gcmApiKey;
-    }
+	public AbstractPushService(final String gcmApiKey) {
+		this.gcmApiKey = gcmApiKey;
+	}
 
-    public AbstractPushService(KeyPair keyPair) {
-        this.publicKey = keyPair.getPublic();
-        this.privateKey = keyPair.getPrivate();
-    }
+	public AbstractPushService(final KeyPair keyPair) {
+		this.publicKey = keyPair.getPublic();
+		this.privateKey = keyPair.getPrivate();
+	}
 
-    public AbstractPushService(KeyPair keyPair, String subject) {
-        this(keyPair);
-        this.subject = subject;
-    }
+	public AbstractPushService(final KeyPair keyPair, final String subject) {
+		this(keyPair);
+		this.subject = subject;
+	}
 
-    public AbstractPushService(String publicKey, String privateKey) throws GeneralSecurityException {
-        this.publicKey = Utils.loadPublicKey(publicKey);
-        this.privateKey = Utils.loadPrivateKey(privateKey);
-    }
+	public AbstractPushService(final String publicKey, final String privateKey) throws GeneralSecurityException {
+		this.publicKey = Utils.loadPublicKey(publicKey);
+		this.privateKey = Utils.loadPrivateKey(privateKey);
+	}
 
-    public AbstractPushService(String publicKey, String privateKey, String subject) throws GeneralSecurityException {
-        this(publicKey, privateKey);
-        this.subject = subject;
-    }
+	public AbstractPushService(final String publicKey, final String privateKey, final String subject)
+			throws GeneralSecurityException {
+		this(publicKey, privateKey);
+		this.subject = subject;
+	}
 
-    /**
-     * Encrypt the payload.
-     *
-     * Encryption uses Elliptic curve Diffie-Hellman (ECDH) cryptography over the prime256v1 curve.
-     *
-     * @param payload       Payload to encrypt.
-     * @param userPublicKey The user agent's public key (keys.p256dh).
-     * @param userAuth      The user agent's authentication secret (keys.auth).
-     * @param encoding
-     * @return An Encrypted object containing the public key, salt, and ciphertext.
-     * @throws GeneralSecurityException
-     */
-    public static Encrypted encrypt(byte[] payload, ECPublicKey userPublicKey, byte[] userAuth, Encoding encoding) throws GeneralSecurityException {
-        KeyPair localKeyPair = generateLocalKeyPair();
+	/**
+	 * Encrypt the payload.
+	 *
+	 * Encryption uses Elliptic curve Diffie-Hellman (ECDH) cryptography over the
+	 * prime256v1 curve.
+	 *
+	 * @param payload       Payload to encrypt.
+	 * @param userPublicKey The user agent's public key (keys.p256dh).
+	 * @param userAuth      The user agent's authentication secret (keys.auth).
+	 * @param encoding
+	 * @return An Encrypted object containing the public key, salt, and ciphertext.
+	 * @throws GeneralSecurityException
+	 */
+	public static Encrypted encrypt(final byte[] payload, final ECPublicKey userPublicKey, final byte[] userAuth,
+			final Encoding encoding) throws GeneralSecurityException {
+		final KeyPair localKeyPair = generateLocalKeyPair();
 
-        Map<String, KeyPair> keys = new HashMap<>();
-        keys.put(SERVER_KEY_ID, localKeyPair);
+		final Map<String, KeyPair> keys = new HashMap<>();
+		keys.put(SERVER_KEY_ID, localKeyPair);
 
-        Map<String, String> labels = new HashMap<>();
-        labels.put(SERVER_KEY_ID, SERVER_KEY_CURVE);
+		final Map<String, String> labels = new HashMap<>();
+		labels.put(SERVER_KEY_ID, SERVER_KEY_CURVE);
 
-        byte[] salt = new byte[16];
-        SECURE_RANDOM.nextBytes(salt);
+		final byte[] salt = new byte[16];
+		SECURE_RANDOM.nextBytes(salt);
 
-        HttpEce httpEce = new HttpEce(keys, labels);
-        byte[] ciphertext = httpEce.encrypt(payload, salt, null, SERVER_KEY_ID, userPublicKey, userAuth, encoding);
+		final HttpEce httpEce = new HttpEce(keys, labels);
+		final byte[] ciphertext = httpEce.encrypt(payload, salt, null, SERVER_KEY_ID, userPublicKey, userAuth,
+				encoding);
 
-        return new Encrypted.Builder()
-                .withSalt(salt)
-                .withPublicKey(localKeyPair.getPublic())
-                .withCiphertext(ciphertext)
-                .build();
-    }
+		return new Encrypted.Builder().withSalt(salt).withPublicKey(localKeyPair.getPublic()).withCiphertext(ciphertext)
+				.build();
+	}
 
-    /**
-     * Generate the local (ephemeral) keys.
-     *
-     * @return
-     * @throws NoSuchAlgorithmException
-     * @throws NoSuchProviderException
-     * @throws InvalidAlgorithmParameterException
-     */
-    private static KeyPair generateLocalKeyPair() throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
-        ECNamedCurveParameterSpec parameterSpec = ECNamedCurveTable.getParameterSpec("prime256v1");
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("ECDH", "BC");
-        keyPairGenerator.initialize(parameterSpec);
+	/**
+	 * Generate the local (ephemeral) keys.
+	 *
+	 * @return
+	 * @throws NoSuchAlgorithmException
+	 * @throws NoSuchProviderException
+	 * @throws InvalidAlgorithmParameterException
+	 */
+	private static KeyPair generateLocalKeyPair()
+			throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
+		final ECNamedCurveParameterSpec parameterSpec = ECNamedCurveTable.getParameterSpec("prime256v1");
+		final KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("ECDH", "BC");
+		keyPairGenerator.initialize(parameterSpec);
 
-        return keyPairGenerator.generateKeyPair();
-    }
+		return keyPairGenerator.generateKeyPair();
+	}
 
-    protected final HttpRequest prepareRequest(Notification notification, Encoding encoding) throws GeneralSecurityException, IOException, JoseException {
-        if (getPrivateKey() != null && getPublicKey() != null) {
-            if (!Utils.verifyKeyPair(getPrivateKey(), getPublicKey())) {
-                throw new IllegalStateException("Public key and private key do not match.");
-            }
-        }
+	protected final HttpRequest prepareRequest(final Notification notification, final Encoding encoding)
+			throws GeneralSecurityException, IOException, JoseException {
+		if (getPrivateKey() != null && getPublicKey() != null) {
+			if (!Utils.verifyKeyPair(getPrivateKey(), getPublicKey())) {
+				throw new IllegalStateException("Public key and private key do not match.");
+			}
+		}
 
-        Encrypted encrypted = encrypt(
-                notification.getPayload(),
-                notification.getUserPublicKey(),
-                notification.getUserAuth(),
-                encoding
-        );
+		final Encrypted encrypted = encrypt(notification.getPayload(), notification.getUserPublicKey(),
+				notification.getUserAuth(), encoding);
 
-        byte[] dh = Utils.encode((ECPublicKey) encrypted.getPublicKey());
-        byte[] salt = encrypted.getSalt();
+		final byte[] dh = Utils.encode((ECPublicKey) encrypted.getPublicKey());
+		final byte[] salt = encrypted.getSalt();
 
-        String url = notification.getEndpoint();
-        Map<String, String> headers = new HashMap<>();
-        byte[] body = null;
+		String url = notification.getEndpoint();
+		final Map<String, String> headers = new HashMap<>();
+		byte[] body = null;
 
-        headers.put("TTL", String.valueOf(notification.getTTL()));
+		headers.put("TTL", String.valueOf(notification.getTTL()));
 
-        if (notification.hasUrgency()) {
-            headers.put("Urgency", notification.getUrgency().getHeaderValue());
-        }
+		if (notification.hasUrgency()) {
+			headers.put("Urgency", notification.getUrgency().getHeaderValue());
+		}
 
-        if (notification.hasTopic()) {
-            headers.put("Topic", notification.getTopic());
-        }
+		if (notification.hasTopic()) {
+			headers.put("Topic", notification.getTopic());
+		}
 
+		if (notification.hasPayload()) {
+			headers.put("Content-Type", "application/octet-stream");
 
-        if (notification.hasPayload()) {
-            headers.put("Content-Type", "application/octet-stream");
+			if (encoding == Encoding.AES128GCM) {
+				headers.put("Content-Encoding", "aes128gcm");
+			}
+			else if (encoding == Encoding.AESGCM) {
+				headers.put("Content-Encoding", "aesgcm");
+				headers.put("Encryption", "salt=" + Base64.getUrlEncoder().withoutPadding().encodeToString(salt));
+				headers.put("Crypto-Key", "dh=" + Base64.getUrlEncoder().encodeToString(dh));
+			}
 
-            if (encoding == Encoding.AES128GCM) {
-                headers.put("Content-Encoding", "aes128gcm");
-            } else if (encoding == Encoding.AESGCM) {
-                headers.put("Content-Encoding", "aesgcm");
-                headers.put("Encryption", "salt=" + Base64.getUrlEncoder().withoutPadding().encodeToString(salt));
-                headers.put("Crypto-Key", "dh=" + Base64.getUrlEncoder().encodeToString(dh));
-            }
+			body = encrypted.getCiphertext();
+		}
 
-            body = encrypted.getCiphertext();
-        }
+		if (notification.isGcm()) {
+			if (getGcmApiKey() == null) {
+				throw new IllegalStateException(
+						"An GCM API key is needed to send a push notification to a GCM endpoint.");
+			}
 
-        if (notification.isGcm()) {
-            if (getGcmApiKey() == null) {
-                throw new IllegalStateException("An GCM API key is needed to send a push notification to a GCM endpoint.");
-            }
+			headers.put("Authorization", "key=" + getGcmApiKey());
+		}
+		else if (vapidEnabled()) {
+			if (encoding == Encoding.AES128GCM) {
+				if (notification.getEndpoint().startsWith("https://fcm.googleapis.com")) {
+					url = notification.getEndpoint().replace("fcm/send", "wp");
+				}
+			}
 
-            headers.put("Authorization", "key=" + getGcmApiKey());
-        } else if (vapidEnabled()) {
-            if (encoding == Encoding.AES128GCM) {
-                if (notification.getEndpoint().startsWith("https://fcm.googleapis.com")) {
-                    url = notification.getEndpoint().replace("fcm/send", "wp");
-                }
-            }
+			final JwtClaims claims = new JwtClaims();
+			claims.setAudience(notification.getOrigin());
+			claims.setExpirationTimeMinutesInTheFuture(12 * 60);
+			if (getSubject() != null) {
+				claims.setSubject(getSubject());
+			}
 
-            JwtClaims claims = new JwtClaims();
-            claims.setAudience(notification.getOrigin());
-            claims.setExpirationTimeMinutesInTheFuture(12 * 60);
-            if (getSubject() != null) {
-                claims.setSubject(getSubject());
-            }
+			final JsonWebSignature jws = new JsonWebSignature();
+			jws.setHeader("typ", "JWT");
+			jws.setHeader("alg", "ES256");
+			jws.setPayload(claims.toJson());
+			jws.setKey(getPrivateKey());
+			jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.ECDSA_USING_P256_CURVE_AND_SHA256);
 
-            JsonWebSignature jws = new JsonWebSignature();
-            jws.setHeader("typ", "JWT");
-            jws.setHeader("alg", "ES256");
-            jws.setPayload(claims.toJson());
-            jws.setKey(getPrivateKey());
-            jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.ECDSA_USING_P256_CURVE_AND_SHA256);
+			final byte[] pk = Utils.encode((ECPublicKey) getPublicKey());
 
-            byte[] pk = Utils.encode((ECPublicKey) getPublicKey());
+			if (encoding == Encoding.AES128GCM) {
+				headers.put("Authorization", "vapid t=" + jws.getCompactSerialization() + ", k="
+						+ Base64.getUrlEncoder().withoutPadding().encodeToString(pk));
+			}
+			else if (encoding == Encoding.AESGCM) {
+				headers.put("Authorization", "WebPush " + jws.getCompactSerialization());
+			}
 
-            if (encoding == Encoding.AES128GCM) {
-                headers.put("Authorization", "vapid t=" + jws.getCompactSerialization() + ", k=" + Base64.getUrlEncoder().withoutPadding().encodeToString(pk));
-            } else if (encoding == Encoding.AESGCM) {
-                headers.put("Authorization", "WebPush " + jws.getCompactSerialization());
-            }
+			if (headers.containsKey("Crypto-Key")) {
+				headers.put("Crypto-Key",
+						headers.get("Crypto-Key") + ";p256ecdsa=" + Base64.getUrlEncoder().encodeToString(pk));
+			}
+			else {
+				headers.put("Crypto-Key", "p256ecdsa=" + Base64.getUrlEncoder().encodeToString(pk));
+			}
+		}
+		else if (notification.isFcm() && getGcmApiKey() != null) {
+			headers.put("Authorization", "key=" + getGcmApiKey());
+		}
 
-            if (headers.containsKey("Crypto-Key")) {
-                headers.put("Crypto-Key", headers.get("Crypto-Key") + ";p256ecdsa=" + Base64.getUrlEncoder().encodeToString(pk));
-            } else {
-                headers.put("Crypto-Key", "p256ecdsa=" + Base64.getUrlEncoder().encodeToString(pk));
-            }
-        } else if (notification.isFcm() && getGcmApiKey() != null) {
-            headers.put("Authorization", "key=" + getGcmApiKey());
-        }
+		return new HttpRequest(url, headers, body);
+	}
 
-        return new HttpRequest(url, headers, body);
-    }
+	/**
+	 * Set the Google Cloud Messaging (GCM) API key
+	 *
+	 * @param gcmApiKey
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public T setGcmApiKey(final String gcmApiKey) {
+		this.gcmApiKey = gcmApiKey;
 
-    /**
-     * Set the Google Cloud Messaging (GCM) API key
-     *
-     * @param gcmApiKey
-     * @return
-     */
-    public T setGcmApiKey(String gcmApiKey) {
-        this.gcmApiKey = gcmApiKey;
+		return (T) this;
+	}
 
-        return (T) this;
-    }
+	public String getGcmApiKey() {
+		return gcmApiKey;
+	}
 
-    public String getGcmApiKey() {
-        return gcmApiKey;
-    }
+	public String getSubject() {
+		return subject;
+	}
 
-    public String getSubject() {
-        return subject;
-    }
+	/**
+	 * Set the JWT subject (for VAPID)
+	 *
+	 * @param subject
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public T setSubject(final String subject) {
+		this.subject = subject;
 
-    /**
-     * Set the JWT subject (for VAPID)
-     *
-     * @param subject
-     * @return
-     */
-    public T setSubject(String subject) {
-        this.subject = subject;
+		return (T) this;
+	}
 
-        return (T) this;
-    }
+	/**
+	 * Set the public and private key (for VAPID).
+	 *
+	 * @param keyPair
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public T setKeyPair(final KeyPair keyPair) {
+		setPublicKey(keyPair.getPublic());
+		setPrivateKey(keyPair.getPrivate());
 
-    /**
-     * Set the public and private key (for VAPID).
-     *
-     * @param keyPair
-     * @return
-     */
-    public T setKeyPair(KeyPair keyPair) {
-        setPublicKey(keyPair.getPublic());
-        setPrivateKey(keyPair.getPrivate());
+		return (T) this;
+	}
 
-        return (T) this;
-    }
+	public PublicKey getPublicKey() {
+		return publicKey;
+	}
 
-    public PublicKey getPublicKey() {
-        return publicKey;
-    }
+	/**
+	 * Set the public key using a base64url-encoded string.
+	 *
+	 * @param publicKey
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public T setPublicKey(final String publicKey)
+			throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException {
+		setPublicKey(Utils.loadPublicKey(publicKey));
 
-    /**
-     * Set the public key using a base64url-encoded string.
-     *
-     * @param publicKey
-     * @return
-     */
-    public T setPublicKey(String publicKey) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException {
-        setPublicKey(Utils.loadPublicKey(publicKey));
+		return (T) this;
+	}
 
-        return (T) this;
-    }
+	public PrivateKey getPrivateKey() {
+		return privateKey;
+	}
 
-    public PrivateKey getPrivateKey() {
-        return privateKey;
-    }
+	public KeyPair getKeyPair() {
+		return new KeyPair(publicKey, privateKey);
+	}
 
-    public KeyPair getKeyPair() {
-        return new KeyPair(publicKey, privateKey);
-    }
+	/**
+	 * Set the public key (for VAPID)
+	 *
+	 * @param publicKey
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public T setPublicKey(final PublicKey publicKey) {
+		this.publicKey = publicKey;
 
-    /**
-     * Set the public key (for VAPID)
-     *
-     * @param publicKey
-     * @return
-     */
-    public T setPublicKey(PublicKey publicKey) {
-        this.publicKey = publicKey;
+		return (T) this;
+	}
 
-        return (T) this;
-    }
+	/**
+	 * Set the public key using a base64url-encoded string.
+	 *
+	 * @param privateKey
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public T setPrivateKey(final String privateKey)
+			throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException {
+		setPrivateKey(Utils.loadPrivateKey(privateKey));
 
-    /**
-     * Set the public key using a base64url-encoded string.
-     *
-     * @param privateKey
-     * @return
-     */
-    public T setPrivateKey(String privateKey) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException {
-        setPrivateKey(Utils.loadPrivateKey(privateKey));
+		return (T) this;
+	}
 
-        return (T) this;
-    }
+	/**
+	 * Set the private key (for VAPID)
+	 *
+	 * @param privateKey
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public T setPrivateKey(final PrivateKey privateKey) {
+		this.privateKey = privateKey;
 
-    /**
-     * Set the private key (for VAPID)
-     *
-     * @param privateKey
-     * @return
-     */
-    public T setPrivateKey(PrivateKey privateKey) {
-        this.privateKey = privateKey;
+		return (T) this;
+	}
 
-        return (T) this;
-    }
-
-    /**
-     * Check if VAPID is enabled
-     *
-     * @return
-     */
-    protected boolean vapidEnabled() {
-        return publicKey != null && privateKey != null;
-    }
+	/**
+	 * Check if VAPID is enabled
+	 *
+	 * @return
+	 */
+	protected boolean vapidEnabled() {
+		return publicKey != null && privateKey != null;
+	}
 }

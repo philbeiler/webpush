@@ -1,5 +1,9 @@
 package com.springboot.webpush.controller;
 
+import java.lang.invoke.MethodHandles;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -15,7 +19,7 @@ import com.springboot.webpush.service.NotificationPushService;
 @RestController
 @RequestMapping("/api/key")
 public class PushController {
-
+    private static final Logger LOGGER         = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	private final NotificationPushService notificationPushService;
 
 	/**
@@ -38,6 +42,7 @@ public class PushController {
 
 	@PutMapping
 	void update(@RequestBody final Notification notification) {
-		notificationPushService.send(notification.getPayload());
+	    LOGGER.info("Push {}", notification.getPayload());
+	    notificationPushService.send(notification.getPayload());
 	}
 }

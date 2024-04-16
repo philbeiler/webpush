@@ -1,7 +1,5 @@
 package com.springboot.webpush.service;
 
-import static com.springboot.webpush.impl.Utils.ALGORITHM;
-import static com.springboot.webpush.impl.Utils.CURVE;
 import static org.bouncycastle.jce.provider.BouncyCastleProvider.PROVIDER_NAME;
 
 import java.io.File;
@@ -29,7 +27,8 @@ import org.springframework.stereotype.Service;
 
 import com.springboot.webpush.controller.model.ClientKeyPair;
 import com.springboot.webpush.exception.ClientKeyPairException;
-import com.springboot.webpush.impl.Utils;
+
+import nl.martijndwars.webpush.Utils;
 
 @Service
 public class KeyPairService {
@@ -55,8 +54,7 @@ public class KeyPairService {
 					Base64.getUrlEncoder().encodeToString(encodedPublicKey),
 					Base64.getUrlEncoder().encodeToString(encodedPrivateKey));
 
-		}
-		catch (InvalidAlgorithmParameterException | NoSuchProviderException | NoSuchAlgorithmException
+		} catch (InvalidAlgorithmParameterException | NoSuchProviderException | NoSuchAlgorithmException
 				| IOException e) {
 			LOGGER.error("Exception", e);
 			throw new ClientKeyPairException();
@@ -74,9 +72,9 @@ public class KeyPairService {
 	 */
 	public KeyPair generateKeyPair()
 			throws InvalidAlgorithmParameterException, NoSuchProviderException, NoSuchAlgorithmException {
-		final ECNamedCurveParameterSpec parameterSpec = ECNamedCurveTable.getParameterSpec(CURVE);
+		final ECNamedCurveParameterSpec parameterSpec = ECNamedCurveTable.getParameterSpec("prime256v1");
 
-		final KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(ALGORITHM, PROVIDER_NAME);
+		final KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("ECDH", PROVIDER_NAME);
 		keyPairGenerator.initialize(parameterSpec);
 
 		return keyPairGenerator.generateKeyPair();

@@ -1,5 +1,6 @@
 package com.springboot.webpush.controller.model;
 
+@Deprecated
 public class Notification {
 	private String payload;
 

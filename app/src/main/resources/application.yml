@@ -10,3 +10,7 @@ spring:
 configuration:
   property:
     value: Hello from Property file
+
+springdoc:
+  swagger-ui:
+    use-root-path: true

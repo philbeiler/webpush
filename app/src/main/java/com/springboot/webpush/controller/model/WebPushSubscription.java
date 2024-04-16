@@ -1,9 +1,13 @@
 package com.springboot.webpush.controller.model;
 
-public class PushKey {
+public class WebPushSubscription {
 	private String endpoint;
 	private Integer expriationTime;
 	private Key keys;
+
+	public WebPushSubscription() {
+		super();
+	}
 
 	/**
 	 * @return the endpoint

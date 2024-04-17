@@ -17,7 +17,7 @@ public class NotificationController {
 		this.notificationService = notificationService;
 	}
 
-	@PostMapping("/notify-all")
+	@PostMapping("/api/notify-all")
 	public WebPushMessage notifyAll(@RequestBody WebPushMessage message) {
 		notificationService.notifyAll(message);
 		return message;

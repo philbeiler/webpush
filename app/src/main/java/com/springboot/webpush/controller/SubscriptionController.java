@@ -16,12 +16,12 @@ public class SubscriptionController {
 		this.subscriptionService = subscriptionService;
 	}
 
-	@PostMapping("/subscribe")
+	@PostMapping("/api/subscribe")
 	public void subscribe(@RequestBody WebPushSubscription subscription) {
 		subscriptionService.subscribe(subscription);
 	}
 
-	@PostMapping("/unsubscribe")
+	@PostMapping("/api/unsubscribe")
 	public void unsubscribe(@RequestBody WebPushSubscription subscription) {
 		subscriptionService.unsubscribe(subscription);
 	}

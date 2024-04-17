@@ -37,4 +37,9 @@ public class WebPushMessage {
 		this.message = message;
 	}
 
+	@Override
+	public String toString() {
+		return "WebPushMessage [title=" + title + ", clickTarget=" + clickTarget + ", message=" + message + "]";
+	}
+
 }

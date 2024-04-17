@@ -48,6 +48,7 @@ public class NotificationService {
 
 	public void notifyAll(WebPushMessage message) {
 
+		LOGGER.info("Notificaiton Message [{}]", message);
 		for (WebPushSubscription subscription : subscriptionService.getSubscriptions()) {
 			LOGGER.info("Notifying [{}]", subscription.getEndpoint());
 

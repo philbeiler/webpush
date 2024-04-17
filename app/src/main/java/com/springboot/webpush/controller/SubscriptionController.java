@@ -26,16 +26,4 @@ public class SubscriptionController {
 		subscriptionService.unsubscribe(subscription);
 	}
 
-	@Deprecated
-	@PostMapping("/subscribe")
-	public void subscribeX(@RequestBody WebPushSubscription subscription) {
-		subscriptionService.subscribe(subscription);
-	}
-
-	@Deprecated
-	@PostMapping("/unsubscribe")
-	public void unsubscribeX(@RequestBody WebPushSubscription subscription) {
-		subscriptionService.unsubscribe(subscription);
-	}
-
 }

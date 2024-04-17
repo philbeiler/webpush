@@ -8,6 +8,7 @@ import java.security.NoSuchProviderException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.concurrent.ExecutionException;
 
+import org.apache.http.util.EntityUtils;
 import org.jose4j.lang.JoseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,8 +46,11 @@ public class NotificationService {
 					.setPrivateKey(clientKeyPair.getPrivateKeyAsString()) //
 					.setSubject("mailto:admin@domain.com");
 		} catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidKeySpecException e) {
+			e.printStackTrace();
+		} finally {
 			pushService = new PushService();
 		}
+
 		this.pushService = pushService;
 	}
 
@@ -57,16 +61,12 @@ public class NotificationService {
 			LOGGER.info("Notifying [{}]", subscription.getEndpoint());
 
 			try {
-
-				// var notification = new Notification(subscription.get(), message.getMessage(),
-				// Urgency.HIGH);
 				var notification = new Notification(subscription.get(), objectMapper.writeValueAsString(message),
 						Urgency.HIGH);
-//				Notification notification = new Notification(subscription.getEndpoint(),
-				// subscription.getKeys().getP256dh(), subscription.getKeys().getAuth(),
-				// objectMapper.writeValueAsBytes(message), Urgency.HIGH);
+				var rc = pushService.send(notification);
 
-				pushService.send(notification);
+				LOGGER.info("{}", EntityUtils.toString(rc.getEntity()));
+
 			} catch (IOException | GeneralSecurityException | JoseException | ExecutionException |
 
 					InterruptedException e) {

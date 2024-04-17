@@ -19,10 +19,14 @@ import com.springboot.webpush.controller.model.WebPushSubscription;
 
 import nl.martijndwars.webpush.Notification;
 import nl.martijndwars.webpush.PushService;
+import nl.martijndwars.webpush.Urgency;
 
 @Service
 public class NotificationService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	private static final int ONE_DAY_DURATION_IN_SECONDS = 86400;
+	private static int DEFAULT_TTL = 28 * ONE_DAY_DURATION_IN_SECONDS;
+
 	private final SubscriptionService subscriptionService;
 	private final ObjectMapper objectMapper;
 	private final PushService pushService;
@@ -37,8 +41,8 @@ public class NotificationService {
 		try {
 			var clientKeyPair = keyPairService.generate();
 			pushService = new PushService() //
-					.setPublicKey(clientKeyPair.getPublicKey()) //
-					.setPrivateKey(clientKeyPair.getPrivateKey()) //
+					.setPublicKey(clientKeyPair.getPublicKeyAsString()) //
+					.setPrivateKey(clientKeyPair.getPrivateKeyAsString()) //
 					.setSubject("mailto:admin@domain.com");
 		} catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidKeySpecException e) {
 			pushService = new PushService();
@@ -53,12 +57,19 @@ public class NotificationService {
 			LOGGER.info("Notifying [{}]", subscription.getEndpoint());
 
 			try {
-				Notification notification = new Notification(subscription.getEndpoint(),
-						subscription.getKeys().getP256dh(), subscription.getKeys().getAuth(),
-						objectMapper.writeValueAsBytes(message));
+
+				// var notification = new Notification(subscription.get(), message.getMessage(),
+				// Urgency.HIGH);
+				var notification = new Notification(subscription.get(), objectMapper.writeValueAsString(message),
+						Urgency.HIGH);
+//				Notification notification = new Notification(subscription.getEndpoint(),
+				// subscription.getKeys().getP256dh(), subscription.getKeys().getAuth(),
+				// objectMapper.writeValueAsBytes(message), Urgency.HIGH);
+
 				pushService.send(notification);
-			} catch (IOException | GeneralSecurityException | JoseException | ExecutionException
-					| InterruptedException e) {
+			} catch (IOException | GeneralSecurityException | JoseException | ExecutionException |
+
+					InterruptedException e) {
 				LOGGER.error("Unabled to send notification", e);
 
 			}

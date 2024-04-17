@@ -27,9 +27,15 @@ public class SubscriptionController {
 	}
 
 	@Deprecated
-	@PostMapping("/api/key")
-	WebPushSubscription update(@RequestBody final WebPushSubscription pushKey) {
-		subscriptionService.subscribe(pushKey);
-		return pushKey;
+	@PostMapping("/subscribe")
+	public void subscribeX(@RequestBody WebPushSubscription subscription) {
+		subscriptionService.subscribe(subscription);
 	}
+
+	@Deprecated
+	@PostMapping("/unsubscribe")
+	public void unsubscribeX(@RequestBody WebPushSubscription subscription) {
+		subscriptionService.unsubscribe(subscription);
+	}
+
 }

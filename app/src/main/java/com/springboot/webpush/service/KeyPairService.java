@@ -12,7 +12,6 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.util.Base64;
 
 import org.bouncycastle.jce.ECNamedCurveTable;
 import org.bouncycastle.jce.interfaces.ECPrivateKey;
@@ -28,15 +27,13 @@ import org.springframework.stereotype.Service;
 import com.springboot.webpush.controller.model.ClientKeyPair;
 import com.springboot.webpush.exception.ClientKeyPairException;
 
-import nl.martijndwars.webpush.Utils;
-
 @Service
 public class KeyPairService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(KeyPairService.class);
-	private final File publicKeyFile;
+//	private final File publicKeyFile;
 
 	public KeyPairService(@Value("${public.key.location:/tmp/public.key}") final String publicKeyFile) {
-		this.publicKeyFile = new File(publicKeyFile);
+//		this.publicKeyFile = new File(publicKeyFile);
 	}
 
 	public ClientKeyPair generate() {
@@ -45,17 +42,9 @@ public class KeyPairService {
 			final ECPublicKey publicKey = (ECPublicKey) keyPair.getPublic();
 			final ECPrivateKey privateKey = (ECPrivateKey) keyPair.getPrivate();
 
-			final byte[] encodedPublicKey = Utils.encode(publicKey);
-			final byte[] encodedPrivateKey = Utils.encode(privateKey);
+			return new ClientKeyPair(publicKey, privateKey);
 
-			writeKey(keyPair.getPublic(), publicKeyFile);
-
-			return new ClientKeyPair( //
-					Base64.getUrlEncoder().encodeToString(encodedPublicKey),
-					Base64.getUrlEncoder().encodeToString(encodedPrivateKey));
-
-		} catch (InvalidAlgorithmParameterException | NoSuchProviderException | NoSuchAlgorithmException
-				| IOException e) {
+		} catch (InvalidAlgorithmParameterException | NoSuchProviderException | NoSuchAlgorithmException e) {
 			LOGGER.error("Exception", e);
 			throw new ClientKeyPairException();
 		}

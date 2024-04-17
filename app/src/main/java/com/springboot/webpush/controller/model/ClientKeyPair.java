@@ -1,39 +1,17 @@
 package com.springboot.webpush.controller.model;
 
-import java.util.Base64;
-
-import org.bouncycastle.jce.interfaces.ECPrivateKey;
-import org.bouncycastle.jce.interfaces.ECPublicKey;
-
-import nl.martijndwars.webpush.Utils;
+import java.security.KeyPair;
 
 public class ClientKeyPair {
 
-	private final ECPublicKey publicKey;
-	private final ECPrivateKey privateKey;
+	private final KeyPair keyPair;
 
-	public ClientKeyPair(ECPublicKey publicKey, ECPrivateKey privateKey) {
+	public ClientKeyPair(KeyPair keyPar) {
 		super();
-		this.publicKey = publicKey;
-		this.privateKey = privateKey;
+		this.keyPair = keyPar;
 	}
 
-	public ECPublicKey getPublicKey() {
-		return publicKey;
+	public KeyPair getKeyPair() {
+		return keyPair;
 	}
-
-	public ECPrivateKey getPrivateKey() {
-		return privateKey;
-	}
-
-	public String getPublicKeyAsString() {
-		final byte[] encodedPublicKey = Utils.encode(publicKey);
-		return Base64.getUrlEncoder().encodeToString(encodedPublicKey);
-	}
-
-	public String getPrivateKeyAsString() {
-		final byte[] encodedPrivateKey = Utils.encode(privateKey);
-		return Base64.getUrlEncoder().encodeToString(encodedPrivateKey);
-	}
-
 }

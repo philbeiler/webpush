@@ -3,9 +3,6 @@ package com.springboot.webpush.service;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.security.GeneralSecurityException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.http.util.EntityUtils;
@@ -26,8 +23,6 @@ import nl.martijndwars.webpush.Urgency;
 @Service
 public class NotificationService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-	private static final int ONE_DAY_DURATION_IN_SECONDS = 86400;
-	private static int DEFAULT_TTL = 28 * ONE_DAY_DURATION_IN_SECONDS;
 
 	private final SubscriptionService subscriptionService;
 	private final ObjectMapper objectMapper;
@@ -39,19 +34,9 @@ public class NotificationService {
 		this.subscriptionService = subscriptionService;
 		this.objectMapper = objectMapper;
 
-		PushService pushService;
-		try {
-			var clientKeyPair = keyPairService.generate();
-			pushService = new PushService() //
-					.setPublicKey(clientKeyPair.getPublicKeyAsString()) //
-					.setPrivateKey(clientKeyPair.getPrivateKeyAsString()) //
-					.setSubject("mailto:admin@domain.com");
-		} catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidKeySpecException e) {
-			e.printStackTrace();
-			pushService = new PushService();
-		}
+		this.pushService = new PushService(keyPairService.generate().getKeyPair()) //
+				.setSubject("mailto:admin@domain.com");
 
-		this.pushService = pushService;
 	}
 
 	public void notifyAll(WebPushMessage message) {

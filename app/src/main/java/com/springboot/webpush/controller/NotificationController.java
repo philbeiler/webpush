@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.springboot.webpush.controller.model.Notification;
 import com.springboot.webpush.controller.model.WebPushMessage;
 import com.springboot.webpush.service.NotificationService;
 
@@ -24,9 +23,10 @@ public class NotificationController {
 	}
 
 	@Deprecated
-	@PutMapping("/api/key")
-	public WebPushMessage update(@RequestBody final Notification notification) {
-		return notifyAll(new WebPushMessage(notification.getPayload()));
+	@PutMapping("/notify-all")
+	public WebPushMessage notifyAllX(@RequestBody WebPushMessage message) {
+		notificationService.notifyAll(message);
+		return message;
 	}
 
 }

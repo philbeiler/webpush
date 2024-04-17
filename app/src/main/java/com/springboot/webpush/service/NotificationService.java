@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springboot.webpush.controller.model.WebPushMessage;
 import com.springboot.webpush.controller.model.WebPushSubscription;
 
+import nl.martijndwars.webpush.Encoding;
 import nl.martijndwars.webpush.Notification;
 import nl.martijndwars.webpush.PushService;
 import nl.martijndwars.webpush.Urgency;
@@ -47,7 +48,6 @@ public class NotificationService {
 					.setSubject("mailto:admin@domain.com");
 		} catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidKeySpecException e) {
 			e.printStackTrace();
-		} finally {
 			pushService = new PushService();
 		}
 
@@ -63,7 +63,7 @@ public class NotificationService {
 			try {
 				var notification = new Notification(subscription.get(), objectMapper.writeValueAsString(message),
 						Urgency.HIGH);
-				var rc = pushService.send(notification);
+				var rc = pushService.send(notification, Encoding.AES128GCM);
 
 				LOGGER.info("{}", EntityUtils.toString(rc.getEntity()));
 

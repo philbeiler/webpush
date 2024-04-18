@@ -1,0 +1,25 @@
+<div>
+    <mat-form-field>
+        <mat-label>Push Service IP</mat-label>
+        <input matInput [formControl]="ip">
+        <mat-hint color="white">Include http or https</mat-hint>
+    </mat-form-field>
+</div>
+<div style="display:flex; gap: 5px">
+    <div style="width:32px"></div>
+    <button mat-raised-button (click)="subscribeClicked()">
+        Register with server
+    </button>
+    <div style=" width:32px">
+        <mat-icon *ngIf="subscribed" style="color: green;">check</mat-icon>
+    </div>
+</div>
+<div style="display:flex; gap: 5px">
+    <div style="width:32px"></div>
+    <button mat-raised-button (click)="requestPushNotification()">
+        Send me a push notification
+    </button>
+    <div style=" width:32px">
+        <mat-icon *ngIf="pushRequested" style="color: green;">check</mat-icon>
+    </div>
+</div>

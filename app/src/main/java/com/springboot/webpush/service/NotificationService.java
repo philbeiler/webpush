@@ -19,6 +19,8 @@ import nl.martijndwars.webpush.Encoding;
 import nl.martijndwars.webpush.Notification;
 import nl.martijndwars.webpush.PushService;
 import nl.martijndwars.webpush.Urgency;
+import java.security.KeyPair;
+import java.security.PublicKey;
 
 @Service
 public class NotificationService {
@@ -26,17 +28,32 @@ public class NotificationService {
 
 	private final SubscriptionService subscriptionService;
 	private final ObjectMapper objectMapper;
-	private final PushService pushService;
+	private PushService pushService;
+	private final KeyPair keyPair;
 
 	public NotificationService(SubscriptionService subscriptionService, ObjectMapper objectMapper,
 			final KeyPairService keyPairService) {
 		super();
 		this.subscriptionService = subscriptionService;
 		this.objectMapper = objectMapper;
+		this.keyPair = keyPairService.generate().getKeyPair();
 
-		this.pushService = new PushService(keyPairService.generate().getKeyPair()) //
-				.setSubject("mailto:admin@domain.com");
+		/*
+		 * this.pushService = new PushService(this.keyPair) //
+		 * .setSubject("mailto:admin@domain.com");
+		 */
+		try {
+			this.pushService = new PushService(
+					"BJ3kKgvZR34Wt-dJMG9L7Lh03ISRlWueIgg-Vp5V5oYsDPr47_szfNsxxLQrghPtuN3XaI6A3FVZVZuVa7LZOFY",
+					"pMicnxO7KOCxUjbA6--6S1R5NCbnyE4A0-EZxravdGA").setSubject("mailto:admin@domain.com");
+		} catch (GeneralSecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
+	public PublicKey getPublicKey() {
+		return this.keyPair.getPublic();
 	}
 
 	public void notifyAll(WebPushMessage message) {
@@ -46,8 +63,18 @@ public class NotificationService {
 			LOGGER.info("Notifying [{}]", subscription.getEndpoint());
 
 			try {
-				var notification = new Notification(subscription.get(), objectMapper.writeValueAsString(message),
+				LOGGER.info("creating notificatoin");
+				// The payload here must be of the form { notification: Notification }
+				// Where notification is defined here:
+				// https://developer.mozilla.org/en-US/docs/Web/API/Notification
+				var notification = new Notification(subscription.get(),
+						"{\"notification\":{\"title\":\"hello world\"}}",
 						Urgency.HIGH);
+				/*
+				 * var notification = new Notification(subscription.get(),
+				 * objectMapper.writeValueAsString(message),
+				 * Urgency.HIGH);
+				 */
 				var rc = pushService.send(notification, Encoding.AES128GCM);
 
 				LOGGER.info("{}", EntityUtils.toString(rc.getEntity()));

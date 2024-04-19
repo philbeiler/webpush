@@ -16,7 +16,7 @@ public class NotificationController {
 	}
 
 	@PutMapping("/api/notify-all")
-	public WebPushMessage notifyAll(@RequestBody WebPushMessage message) {
+	public WebPushMessage notifyAll(@RequestBody final WebPushMessage message) {
 		notificationService.notifyAll(message);
 		return message;
 	}

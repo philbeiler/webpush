@@ -34,8 +34,8 @@ export class AppComponent {
   message = new FormControl<string>('Hello world');
 
   vapidPublicKey?: string;
-  subscribed = false;
   pushRequested = false;
+  subscription?: any;
 
   constructor(
     private http: HttpClient,
@@ -43,11 +43,14 @@ export class AppComponent {
   ) {  }
 
   ngOnInit(): void {
-    
+    this.swPush.subscription.subscribe(
+      (sub) => {
+        this.subscription = sub;
+      }
+    )
   }
 
   subscribeClicked(): void {
-
     this.http.get(`${this.ip.value}/api/vapid-public`, {responseType: 'text'}).subscribe(
       (key) => {
         this.vapidPublicKey = key;
@@ -58,11 +61,15 @@ export class AppComponent {
           serverPublicKey: this.vapidPublicKey
         })
         .then(sub => this.addPushSubscriber(sub).subscribe(
-          ()=> this.subscribed = true
+          ()=> this.subscription = sub
         ))
         .catch(err => console.error("Could not subscribe to notifications", err)); 
-          }
-        );
+      });
+  }
+  
+  unsubscribeClicked(): void {
+	  this.swPush.unsubscribe();
+    this.subscription = undefined;
   }
 
   addPushSubscriber(sub:PushSubscription) {

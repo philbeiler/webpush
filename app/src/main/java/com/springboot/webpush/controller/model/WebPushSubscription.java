@@ -1,39 +1,39 @@
 package com.springboot.webpush.controller.model;
 
-import nl.martijndwars.webpush.Subscription;
-import nl.martijndwars.webpush.Subscription.Keys;
+import com.springboot.webpush.common.api.PushSubscription;
 
 public class WebPushSubscription {
-	private String endpoint;
-	private Integer expirationTime;
-	private Key keys;
+    private String          endpoint;
+    private Integer         expirationTime;
+    private SubscriptionKey keys;
 
-	public String getEndpoint() {
-		return endpoint;
-	}
+    public String getEndpoint() {
+        return endpoint;
+    }
 
-	public void setEndpoint(String endpoint) {
-		this.endpoint = endpoint;
-	}
+    public void setEndpoint(final String endpoint) {
+        this.endpoint = endpoint;
+    }
 
-	public Integer getExpirationTime() {
-		return expirationTime;
-	}
+    public Integer getExpirationTime() {
+        return expirationTime;
+    }
 
-	public void setExpirationTime(Integer expirationTime) {
-		this.expirationTime = expirationTime;
-	}
+    public void setExpirationTime(final Integer expirationTime) {
+        this.expirationTime = expirationTime;
+    }
 
-	public Key getKeys() {
-		return keys;
-	}
+    public SubscriptionKey getKeys() {
+        return keys;
+    }
 
-	public void setKeys(Key keys) {
-		this.keys = keys;
-	}
+    public void setKeys(final SubscriptionKey keys) {
+        this.keys = keys;
+    }
 
-	public Subscription get() {
-		return new Subscription(endpoint, new Keys(keys.getP256dh(), keys.getAuth()));
-	}
+    public PushSubscription get() {
+        return new PushSubscription(endpoint, expirationTime,
+                new com.springboot.webpush.common.api.Key(keys.getP256dh(), keys.getAuth()));
+    }
 
 }

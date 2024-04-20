@@ -1,6 +1,0 @@
-complex:
-  property:
-  - noOfStudents: 10
-    schoolName: HighSchool
-  - noOfStudents: 5
-    schoolName: KinderGarden

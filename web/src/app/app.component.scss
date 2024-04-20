@@ -7,3 +7,18 @@
     flex-direction: column;
     gap: 10px;
 }
+
+.main-container {
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 275px;
+}
+
+button-container {
+    display:flex;
+    gap: 5px
+}

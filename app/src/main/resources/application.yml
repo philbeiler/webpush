@@ -2,15 +2,20 @@ server:
   port: 8080
 spring:
   application:
-    name: student-rest-service
-  profiles:
-    include:
-    - complex
-
-configuration:
-  property:
-    value: Hello from Property file
+    name: push-rest-service
 
 springdoc:
   swagger-ui:
     use-root-path: true
+  show-actuator: true
+
+management:
+   security:
+      enabled: false
+   endpoints:
+     web:
+       exposure:
+         include: "*"
+
+vapid:
+  subject: admin@override.com

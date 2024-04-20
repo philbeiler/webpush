@@ -1,31 +1,32 @@
-<div>
-    <mat-form-field>
-        <mat-label>Push Service IP</mat-label>
-        <input matInput [formControl]="ip">
-        <mat-hint color="white">Include http or https</mat-hint>
-    </mat-form-field>
-</div>
-<div style="display:flex; gap: 5px">
-    <div style="width:32px"></div>
-    <button mat-raised-button (click)="subscribeClicked()">
-        Register with server
-    </button>
-    <div style=" width:32px">
-        <mat-icon *ngIf="subscribed" style="color: green;">check</mat-icon>
+<div class="main-container">
+    <div>
+        <mat-form-field>
+            <mat-label>Push Service IP</mat-label>
+            <input matInput [formControl]="ip">
+            <mat-hint color="white">Include http or https</mat-hint>
+        </mat-form-field>
     </div>
-</div>
-<div>
-    <mat-form-field>
-        <mat-label>Notification Message</mat-label>
-        <input matInput [formControl]="message">
-    </mat-form-field>
-</div>
-<div style="display:flex; gap: 5px">
-    <div style="width:32px"></div>
-    <button mat-raised-button (click)="requestPushNotification()">
-        Send me a push notification
-    </button>
-    <div style=" width:32px">
+    <div class="button-container" >
+        <button mat-raised-button (click)="subscribeClicked()">
+            Subscribe
+        </button>
+        <mat-icon *ngIf="subscription" style="color: green;">check</mat-icon>
+    </div>
+    <div>
+        <button mat-raised-button (click)="unsubscribeClicked()" [disabled]="!subscription">
+            Unsubscribe
+        </button>
+    </div>
+    <div>
+        <mat-form-field subscriptSizing="dynamic">
+            <mat-label>Notification Message</mat-label>
+            <input matInput [formControl]="message">
+        </mat-form-field>
+    </div>
+    <div style="display:flex; gap: 5px">
+        <button mat-raised-button (click)="requestPushNotification()" [disabled]="!subscription">
+            Send me a push notification
+        </button>
         <mat-icon *ngIf="pushRequested" style="color: green;">check</mat-icon>
     </div>
 </div>

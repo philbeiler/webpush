@@ -1,19 +1,20 @@
 package com.springboot.webpush.controller.model;
 
+@Deprecated
 public class Notification {
-	private String title;
+    private String title;
 
-	public String getTitle() {
-		return title;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public void setTitle(final String title) {
-		this.title = title;
-	}
+    public void setTitle(final String title) {
+        this.title = title;
+    }
 
-	@Override
-	public String toString() {
-		return "Notification [title=" + title + "]";
-	}
+    @Override
+    public String toString() {
+        return "Notification [title=" + title + "]";
+    }
 
 }

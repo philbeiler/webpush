@@ -31,6 +31,8 @@ export class AppComponent {
   title = 'PwaNotificationTest';
 
   ip = new FormControl<string>('http://localhost:8080');
+  message = new FormControl<string>('Hello world');
+
   vapidPublicKey?: string;
   subscribed = false;
   pushRequested = false;
@@ -70,7 +72,7 @@ export class AppComponent {
   requestPushNotification() {
     const message  = {
       "notification":{
-        "title": "hello world"
+        "title": this.message.value
       }
     };
       return this.http.put(`${this.ip.value}/api/notify-all`, message).subscribe(

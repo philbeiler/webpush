@@ -13,7 +13,7 @@
         <mat-icon *ngIf="subscription" style="color: green;">check</mat-icon>
     </div>
     <div>
-        <button mat-raised-button (click)="unsubscribeClicked()" [disabled]="!subscription">
+        <button mat-raised-button (click)="unsubscribeClicked()">
             Unsubscribe
         </button>
     </div>

@@ -1,54 +1,48 @@
 package com.springboot.webpush.common.api;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 
 public class Notification {
-    private final String        title;
-    private final String        body;
-    private final Data          data;
-    private final List<Integer> vibrate;
-    private final String        click;
-    private final String        icon;
-    private final String        image;
-    private final boolean       requireInteraction;
 
-    public class Data {
-        private final String url;
+    private static final String OPEN_PWA_ACTION = "openPWA";
 
-        public Data(String url) {
-            super();
-            this.url = url;
-        }
-
-        /**
-         * @return the url
-         */
-        public String getUrl() {
-            return url;
-        }
-
-    }
+    private final String               title;
+    private final String               body;
+    private final Map<String, Object>  data;
+    private final List<Integer>        vibrate;
+    private final List<Action>         actions;
+    private final String               icon;
+    private final String               image;
+    private final boolean              requireInteraction;
 
     /**
      * @param title
      */
     public Notification(final String title) {
-        final List<Integer> vibrate = List.of(200, 100, 200);
+        final List<Integer> vibrate = List.of(180, 20, 80, 20, 80, 20, 180, 20, 180);
         this.title              = title;
-        this.body               = "body test";
-        this.data               = new Data("https://example.com/review/12345");
+        this.body               = "Something happened";
+        this.data               = new HashMap<>();
         this.vibrate            = vibrate;
         this.requireInteraction = true;
-        this.click              = "https://www.evhgear.com/";
+        this.actions              = List.of(new Action("Open PWA", "", OPEN_PWA_ACTION));
         this.icon               = "https://cdn-teams-slug.flaticon.com/google.jpg";
         this.image              = "https://cdn-teams-slug.flaticon.com/google.jpg";
+
+        // The key of this map should match the action property of the Action class this entry will correspond to
+        var onActionClickMap = new HashMap<String, OnActionClick>();
+        onActionClickMap.put(OPEN_PWA_ACTION, new OnActionClick("focusLastFocusedOrOpen", ""));
+        this.data.put("onActionClick", onActionClickMap);
     }
 
     /**
-     * @return the click
+     * @return the actions
      */
-    public String getClick() {
-        return click;
+    public List<Action> getActions() {
+        return actions;
     }
 
     /**
@@ -77,7 +71,7 @@ public class Notification {
     /**
      * @return the data
      */
-    public Data getData() {
+    public Map<String, Object> getData() {
         return data;
     }
 

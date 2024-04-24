@@ -1,16 +1,12 @@
 package com.springboot.webpush.controller.model;
 
-import org.springframework.util.StringUtils;
-
 import com.springboot.webpush.common.api.PushMessage;
 
 import nl.martijndwars.webpush.Urgency;
 
 public class WebPushMessage {
-    private Urgency      urgency;
-    private String       message;
-    @Deprecated
-    private Notification notification;
+    private Urgency urgency;
+    private String  message;
 
     /**
      * @return the urgency
@@ -40,33 +36,7 @@ public class WebPushMessage {
         this.message = message;
     }
 
-    /**
-     * @return the notification
-     */
-    public Notification getNotification() {
-        return notification;
-    }
-
-    /**
-     * @param notification the notification to set
-     */
-    public void setNotification(final Notification notification) {
-        this.notification = notification;
-    }
-
-    @Override
-    public String toString() {
-        return "WebPushMessage [notification=" + notification + "]";
-    }
-
     public PushMessage get() {
-        final String msg;
-        if (notification != null && StringUtils.hasText(notification.getTitle())) {
-            msg = notification.getTitle();
-        }
-        else {
-            msg = message;
-        }
-        return PushMessage.of(msg);
+        return PushMessage.of(message);
     }
 }

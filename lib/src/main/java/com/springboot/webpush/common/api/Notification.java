@@ -28,13 +28,16 @@ public class Notification {
         this.data               = new HashMap<>();
         this.vibrate            = vibrate;
         this.requireInteraction = true;
-        this.actions              = List.of(new Action("Open PWA", "", OPEN_PWA_ACTION));
+        //this.actions              = List.of(new Action("Open PWA", "", OPEN_PWA_ACTION));
+        this.actions            = List.of();         
         this.icon               = "https://cdn-teams-slug.flaticon.com/google.jpg";
         this.image              = "https://cdn-teams-slug.flaticon.com/google.jpg";
 
         // The key of this map should match the action property of the Action class this entry will correspond to
+        // Or "default" for clicking the notification itself.
         var onActionClickMap = new HashMap<String, OnActionClick>();
-        onActionClickMap.put(OPEN_PWA_ACTION, new OnActionClick("focusLastFocusedOrOpen", ""));
+        onActionClickMap.put("default", new OnActionClick("focusLastFocusedOrOpen", null));
+        //onActionClickMap.put(OPEN_PWA_ACTION, new OnActionClick("focusLastFocusedOrOpen", "https://angular.jimboradleyha.duckdns.org"));
         this.data.put("onActionClick", onActionClickMap);
     }
 

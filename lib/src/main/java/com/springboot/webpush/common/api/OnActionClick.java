@@ -10,7 +10,7 @@ public class OnActionClick {
     private final String operation;
     private final String url;
 
-    public  OnActionClick(String operation, String url) {
+    public OnActionClick(String operation, String url) {
         this.operation = operation;
         this.url = url;
     }

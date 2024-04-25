@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SwPush } from '@angular/service-worker';
@@ -35,7 +36,8 @@ const MSG_LOCAL_STORAGE = 'message';
     HttpClientModule,
     ReactiveFormsModule,
     CommonModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatExpansionModule
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',

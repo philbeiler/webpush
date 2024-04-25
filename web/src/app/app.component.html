@@ -1,39 +1,33 @@
 <div class="main-container">
-    <div>
-        <mat-form-field>
-            <mat-label>Push Service IP</mat-label>
-            <input matInput [formControl]="ip">
-            <mat-hint color="white">Include http or https</mat-hint>
-        </mat-form-field>
-    </div>
+    <mat-form-field>
+        <mat-label>Push Service IP</mat-label>
+        <input matInput [formControl]="ip">
+        <mat-hint color="white">Include http or https</mat-hint>
+    </mat-form-field>
     <div class="button-container" >
         <button mat-raised-button (click)="subscribeClicked()">
             Subscribe
         </button>
         <mat-icon *ngIf="subscription" style="color: green;">check</mat-icon>
     </div>
-    <div>
+    <div class="button-container" >
         <button mat-raised-button (click)="unsubscribeClicked()">
             Unsubscribe
         </button>
     </div>
-    <div>
-        <mat-form-field subscriptSizing="dynamic">
-            <mat-label>Notification Message</mat-label>
-            <input matInput [formControl]="message">
-        </mat-form-field>
-    </div>
-    <div style="display:flex; gap: 5px">
-        <button mat-raised-button (click)="requestPushNotification()" [disabled]="!subscription">
+    <mat-form-field subscriptSizing="dynamic">
+        <mat-label>Notification Message</mat-label>
+        <input matInput [formControl]="message">
+    </mat-form-field>
+    <div class="button-container" >
+        <button mat-raised-button (click)="requestPushNotification()" [disabled]="!subscription || !message.valid">
             Send me a push notification
         </button>
         <mat-icon *ngIf="pushRequested" style="color: green;">check</mat-icon>
     </div>
     <div>
       Note: on Android, to allow the over-screen pop up notification, after installing to your home screen,
-      <br>
       long press on the app icon and choose App Info. Click Notifications, then click General.
-      <br>
       Then enable "Pop on screen" setting
     </div>
 </div>

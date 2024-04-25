@@ -6,8 +6,7 @@ import java.util.Map;
 
 
 public class Notification {
-
-    private static final String OPEN_PWA_ACTION = "openPWA";
+    //private static final String OPEN_PWA_ACTION = "openPWA";
 
     private final String               title;
     private final String               body;
@@ -24,13 +23,13 @@ public class Notification {
     public Notification(final String title) {
         final List<Integer> vibrate = List.of(180, 20, 80, 20, 80, 20, 180, 20, 180);
         this.title              = title;
-        this.body               = "Something happened";
+        this.body               = "What an exciting notification!";
         this.data               = new HashMap<>();
         this.vibrate            = vibrate;
         this.requireInteraction = true;
         //this.actions              = List.of(new Action("Open PWA", "", OPEN_PWA_ACTION));
         this.actions            = List.of();         
-        this.icon               = "https://cdn-teams-slug.flaticon.com/google.jpg";
+        this.icon               = "https://cdn-icons-png.flaticon.com/512/3845/3845831.png";
         this.image              = "https://cdn-teams-slug.flaticon.com/google.jpg";
 
         // The key of this map should match the action property of the Action class this entry will correspond to

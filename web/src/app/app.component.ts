@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SwPush } from '@angular/service-worker';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -21,6 +21,7 @@ type Urgency = "VERY_LOW" | "LOW" | "NORMAL" | "HIGH";
 
 const PUB_KEY_LOCAL_STORAGE = 'pubKeyLocal';
 const PREV_BACKEND_LOCAL_STORAGE = 'prevBackend';
+const MSG_LOCAL_STORAGE = 'message';
 
 
 @Component({
@@ -42,10 +43,11 @@ const PREV_BACKEND_LOCAL_STORAGE = 'prevBackend';
 export class AppComponent {
   ipFromStorage = localStorage.getItem(PREV_BACKEND_LOCAL_STORAGE);
   pubKeyFromStorage = localStorage.getItem(PUB_KEY_LOCAL_STORAGE);
+  messageFromStorage = localStorage.getItem(MSG_LOCAL_STORAGE);
   title = 'PwaNotificationTest';
 
   ip = new FormControl<string>( this.ipFromStorage ?? 'http://localhost:8080');
-  message = new FormControl<string>('Hello world');
+  message = new FormControl<string>(this.messageFromStorage ?? 'Hello world', Validators.required);
 
   pushRequested = false;
   subscription?: any;
@@ -116,12 +118,15 @@ export class AppComponent {
   }
 
   requestPushNotification() {
-    const message: WebPushMessage  = {
-      urgency: 'NORMAL',
-      message: this.message.value ?? ''
-    };
-    return this.http.put(`${this.ip.value}/api/notify-all`, message).subscribe(
-      () => this.pushRequested = true
-    );
+    if (this.message.value) {
+      localStorage.setItem(MSG_LOCAL_STORAGE, this.message.value);
+      const message: WebPushMessage  = {
+        urgency: 'NORMAL',
+        message: this.message.value ?? ''
+      };
+      this.http.put(`${this.ip.value}/api/notify-all`, message).subscribe(
+        () => this.pushRequested = true
+      );
+    }
   }
 }

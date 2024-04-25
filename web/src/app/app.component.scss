@@ -19,7 +19,8 @@
     background: #ddd9d9;
 }
 
-button-container {
+.button-container {
     display:flex;
-    gap: 5px
+    gap: 5px;
+    align-items: center;
 }

@@ -1,31 +1,65 @@
-<div>
+<div class="main-container">
+  <div class="form-controls">
     <mat-form-field>
-        <mat-label>Push Service IP</mat-label>
-        <input matInput [formControl]="ip">
-        <mat-hint color="white">Include http or https</mat-hint>
+      <mat-label>Push Service IP</mat-label>
+      <input matInput [formControl]="ip">
+      <mat-hint color="white">Include http or https</mat-hint>
     </mat-form-field>
-</div>
-<div style="display:flex; gap: 5px">
-    <div style="width:32px"></div>
-    <button mat-raised-button (click)="subscribeClicked()">
-        Register with server
-    </button>
-    <div style=" width:32px">
-        <mat-icon *ngIf="subscribed" style="color: green;">check</mat-icon>
+    <div class="button-container">
+      <button mat-raised-button (click)="subscribeClicked()">Subscribe</button>
+      <mat-icon *ngIf="subscription" style="color: green">check</mat-icon>
     </div>
-</div>
-<div>
-    <mat-form-field>
-        <mat-label>Notification Message</mat-label>
-        <input matInput [formControl]="message">
+    <div class="button-container">
+      <button mat-raised-button (click)="unsubscribeClicked()">
+        Unsubscribe
+      </button>
+    </div>
+    <mat-form-field subscriptSizing="dynamic">
+      <mat-label>Notification Title</mat-label>
+      <input matInput [formControl]="message">
     </mat-form-field>
-</div>
-<div style="display:flex; gap: 5px">
-    <div style="width:32px"></div>
-    <button mat-raised-button (click)="requestPushNotification()">
+    <div class="button-container">
+      <button
+        mat-raised-button
+        (click)="requestPushNotification()"
+        [disabled]="!subscription || !message.valid"
+      >
         Send me a push notification
-    </button>
-    <div style=" width:32px">
-        <mat-icon *ngIf="pushRequested" style="color: green;">check</mat-icon>
+      </button>
+      <mat-icon *ngIf="pushRequested" style="color: green">check</mat-icon>
     </div>
+  </div>
+  <div class="form-controls">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title> Installation </mat-panel-title>
+      </mat-expansion-panel-header>
+      <p>
+        In order to receive notifications when the browser tab is
+        closed, this web app must be installed or added to the home screen.
+      </p>
+      <p>
+        On Chrome desktop, look in the address bar for a button to install the
+        app. Firefox and Safari desktop do not currently support installing web
+        apps.
+      </p>
+      <p>
+        On Chrome mobile, look for an Install or Add to Home Screen option in
+        the browser menu while the web app is the active tab. On Safari mobile,
+        after the website loads up, tap the Share button and select Add to Home
+        Screen.
+      </p>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title> Chrome for Android Notifications </mat-panel-title>
+      </mat-expansion-panel-header>
+      <p>
+        Note: on Android, to allow the over-screen pop up notification, after
+        installing to your home screen, long press on the app icon and choose App
+        Info. Click Notifications, then click General. Then enable "Pop on screen"
+        setting
+      </p>
+    </mat-expansion-panel>
+  </div>
 </div>

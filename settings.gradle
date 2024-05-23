@@ -12,3 +12,5 @@ plugins {
 }
 
 include('app')
+include('cmd')
+include('lib')

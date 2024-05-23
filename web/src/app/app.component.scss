@@ -7,3 +7,29 @@
     flex-direction: column;
     gap: 10px;
 }
+
+.main-container {
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    min-width: 275px;
+    background: #ddd9d9;
+    flex-grow: 1;
+    margin: 10px;
+    justify-content: space-between;
+}
+
+.button-container {
+    display:flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.form-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}

@@ -1,27 +1,28 @@
 package com.springboot.webpush.controller;
 
-import java.lang.invoke.MethodHandles;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.springboot.webpush.service.VAPIDService;
+import com.springboot.webpush.common.service.VAPIDService;
 
 @RestController
 public class VAPIDController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-	private final VAPIDService vapidService;
+    private final VAPIDService vapidService;
 
-	public VAPIDController(final VAPIDService vapidService) {
-		super();
-		this.vapidService = vapidService;
-	}
+    public VAPIDController(final VAPIDService vapidService) {
+        super();
+        this.vapidService = vapidService;
+    }
 
-	@GetMapping("/api/vapid-public")
-	public String vapidPublic() {
-		return vapidService.getPublicKey();
-	}
+    @GetMapping("/api/vapid-public")
+    ResponseEntity<String> getVapidPublic() {
+
+        final var keyStore = vapidService.getKeyStore();
+        if (keyStore.valid()) {
+            return ResponseEntity.ok(keyStore.getPublicKey());
+        }
+        return ResponseEntity.notFound().build();
+    }
 
 }

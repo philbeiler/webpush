@@ -7,24 +7,23 @@ import org.springframework.web.bind.annotation.RestController;
 import com.springboot.webpush.common.service.KeyStoreService;
 
 /**
- * The {@link VAPIDController} is responsible to returning the KeyStore public key.
+ * The {@link KeyStoreController} is responsible to returning the KeyStore public key.
  */
 @RestController
-@Deprecated
-public class VAPIDController {
+public class KeyStoreController {
     private final KeyStoreService keyStoreService;
 
     /**
-     * Constructs a new instance of the {@link VAPIDController}.
+     * Constructs a new instance of the {@link KeyStoreController}.
      *
      * @param keyStoreService The {@link KeyStoreService} instance
      */
-    public VAPIDController(final KeyStoreService keyStoreService) {
+    public KeyStoreController(final KeyStoreService keyStoreService) {
         super();
         this.keyStoreService = keyStoreService;
     }
 
-    @GetMapping("/api/vapid-public")
+    @GetMapping("/api/keystore/public")
     ResponseEntity<String> getVapidPublic() {
 
         final var keyStore = keyStoreService.getKeyStore();

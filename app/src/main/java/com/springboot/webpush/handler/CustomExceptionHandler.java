@@ -12,19 +12,40 @@ import com.springboot.webpush.exception.InvalidFieldException;
 import com.springboot.webpush.exception.InvalidHeaderFieldException;
 import com.springboot.webpush.exception.PushkeyNotFoundException;
 
+/**
+ * {@link CustomExceptionHandler}.
+ */
 @RestControllerAdvice
 public class CustomExceptionHandler {
-
+    /**
+     * Handle.
+     *
+     * @param exception The {@link InvalidFieldException} instance.
+     * @return The message.
+     */
     @ExceptionHandler
     public String handleInvalidFieldException(final InvalidFieldException exception) {
         return exception.getMessage();
     }
+
+    /**
+     * Handle.
+     *
+     * @param exception The {@link InvalidHeaderFieldException} instance.
+     * @return The {@link ResponseEntity}.
+     */
 
     @ExceptionHandler
     public ResponseEntity<String> handleInvalidHeaderFieldException(final InvalidHeaderFieldException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.PRECONDITION_FAILED);
     }
 
+    /**
+     * Testing.
+     *
+     * @param ex The {@link PushkeyNotFoundException} instance.
+     * @return The message.
+     */
     @ResponseBody
     @ExceptionHandler(PushkeyNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -32,6 +53,12 @@ public class CustomExceptionHandler {
         return ex.getMessage();
     }
 
+    /**
+     * Testing.
+     *
+     * @param ex The {@link ClientKeyPairException} instance
+     * @return The message.
+     */
     @ResponseBody
     @ExceptionHandler(ClientKeyPairException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

@@ -1,4 +1,4 @@
-package com.springboot.webpush.common.service;
+package com.springboot.webpush.common.util;
 
 import static nl.martijndwars.webpush.Utils.ALGORITHM;
 import static nl.martijndwars.webpush.Utils.CURVE;
@@ -24,25 +24,20 @@ import com.springboot.webpush.common.api.KeyStore;
 
 import nl.martijndwars.webpush.Utils;
 
+/**
+ * The {@link KeyStoreGenerator} is responsible for generating the {@link KeyStore} required to encrypt the push
+ * messages.
+ */
 @Service
-public class VAPIDService {
-    private static final Logger  LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final StorageService storageService;
-    private final KeyStore       keyStore;
+public class KeyStoreGenerator {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    public VAPIDService(final StorageService storageService) {
-        super();
-        this.storageService = storageService;
-        this.keyStore       = storageService.load().orElseGet(() -> generate().orElse(new KeyStore()));
-        if (keyStore.invalid()) {
-            LOGGER.error("Unable to generate VAPID keys, nothing is going to work!");
-        }
-    }
-
-    public KeyStore getKeyStore() {
-        return keyStore;
-    }
-
+    /**
+     * Generates a new {@link KeyStore} instance, containing a public and private key.
+     *
+     * @return The generated {@link KeyStore} instance. If any problems are encountered, an Optional.empty() will be
+     *         returned.
+     */
     public Optional<KeyStore> generate() {
         KeyPair keyPair;
         try {
@@ -53,8 +48,8 @@ public class VAPIDService {
             final var encodedPublicKey  = Utils.encode(publicKey);
             final var encodedPrivateKey = Utils.encode(privateKey);
 
-            return storageService.save(Base64.getUrlEncoder().encodeToString(encodedPrivateKey),
-                    Base64.getUrlEncoder().encodeToString(encodedPublicKey));
+            return Optional.of(new KeyStore(Base64.getUrlEncoder().encodeToString(encodedPrivateKey),
+                    Base64.getUrlEncoder().encodeToString(encodedPublicKey)));
         }
         catch (InvalidAlgorithmParameterException | NoSuchProviderException | NoSuchAlgorithmException e) {
             LOGGER.error("Error", e);
@@ -65,7 +60,6 @@ public class VAPIDService {
     /**
      * Generate an EC keypair on the prime256v1 curve.
      *
-     * @return
      * @throws InvalidAlgorithmParameterException
      * @throws NoSuchProviderException
      * @throws NoSuchAlgorithmException

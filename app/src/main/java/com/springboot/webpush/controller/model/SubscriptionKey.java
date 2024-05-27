@@ -1,5 +1,9 @@
 package com.springboot.webpush.controller.model;
 
+/**
+ * The {@link Key} authentication data, to be used for encrypting the push messages from the back-end service to the
+ * browser specific endpoints (URI).
+ */
 public class SubscriptionKey {
     private String p256dh;
     private String auth;

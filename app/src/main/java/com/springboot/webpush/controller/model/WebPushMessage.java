@@ -1,12 +1,26 @@
 package com.springboot.webpush.controller.model;
 
-import com.springboot.webpush.common.api.PushMessage;
+import org.springframework.util.StringUtils;
+
+import com.springboot.webpush.common.api.types.OnActionClickOperation;
 
 import nl.martijndwars.webpush.Urgency;
 
+/**
+ * The external {@link WebPushMessage} contains the data required to generate a custom web notification.
+ */
 public class WebPushMessage {
-    private Urgency urgency;
-    private String  message;
+    @Deprecated
+    private String                 message;
+
+    private Urgency                urgency;
+    private String                 title;
+    private String                 body;
+    private String                 iconURI;
+    private String                 imageURI;
+    private Boolean                requireInteraction;
+    private OnActionClickOperation onActionClickOperation;
+    private String                 onActionClickURI;
 
     /**
      * @return the urgency
@@ -30,13 +44,59 @@ public class WebPushMessage {
     }
 
     /**
-     * @param message the message to set
+     * @return the title
      */
-    public void setMessage(final String message) {
-        this.message = message;
+    public String getTitle() {
+        return StringUtils.hasText(title) ? title : message;
     }
 
-    public PushMessage get() {
-        return PushMessage.of(message);
+    /**
+     * @return the body
+     */
+    public String getBody() {
+        return body;
     }
+
+    /**
+     * @return the iconURI
+     */
+    public String getIconURI() {
+        return iconURI;
+    }
+
+    /**
+     * @return the imageURI
+     */
+    public String getImageURI() {
+        return imageURI;
+    }
+
+    /**
+     * @return the requireInteraction
+     */
+    public Boolean getRequireInteraction() {
+        return requireInteraction;
+    }
+
+    /**
+     * @return the onActionClickOperation
+     */
+    public OnActionClickOperation getOnActionClickOperation() {
+        return onActionClickOperation;
+    }
+
+    /**
+     * @return the onActionClickURI
+     */
+    public String getOnActionClickURI() {
+        return onActionClickURI;
+    }
+
+    /**
+     * @param onActionClickOperation the onActionClickOperation to set
+     */
+    public void setOnActionClickOperation(final OnActionClickOperation onActionClickOperation) {
+        this.onActionClickOperation = onActionClickOperation;
+    }
+
 }

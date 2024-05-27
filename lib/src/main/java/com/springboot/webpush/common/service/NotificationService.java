@@ -16,33 +16,44 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springboot.webpush.common.api.NotificationStatus;
 import com.springboot.webpush.common.api.PushMessage;
 import com.springboot.webpush.common.api.PushSubscription;
-import com.springboot.webpush.common.configuration.VAPIDConfiguration;
-import com.springboot.webpush.common.util.VAPIDConfigurationAware;
+import com.springboot.webpush.common.configuration.WebPushConfiguration;
 
 import nl.martijndwars.webpush.Encoding;
 import nl.martijndwars.webpush.Notification;
 import nl.martijndwars.webpush.PushService;
 import nl.martijndwars.webpush.Urgency;
 
+/**
+ * The {@link NotificationService} is responsible for sending a {@link PushMessage} to all of the current application
+ * subscribers.
+ */
 @Service
-public class NotificationService extends VAPIDConfigurationAware {
+public class NotificationService {
     private static final Logger       LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final SubscriptionService subscriptionService;
     private final PushService         pushService;
     private final ObjectMapper        objectMapper;
 
-    public NotificationService(final SubscriptionService subscriptionService, final VAPIDService vapidService,
-            final ObjectMapper objectMapper, final VAPIDConfiguration vapidConfiguration) {
-        super(vapidConfiguration);
+    /**
+     * Constructs a new instance of the {@link NotificationService}.
+     *
+     * @param subscriptionService  The {@link SubscriptionService} instance
+     * @param keystoreService      The {@link KeyStoreService} instance
+     * @param objectMapper         The {@link ObjectMapper} instance
+     * @param webPushConfiguration The {@link WebPushConfiguration} instance
+     */
+    public NotificationService(final SubscriptionService subscriptionService, final KeyStoreService keystoreService,
+            final ObjectMapper objectMapper, final WebPushConfiguration webPushConfiguration) {
+        super();
         this.subscriptionService = subscriptionService;
         this.objectMapper        = objectMapper;
 
         PushService pushService = null;
         try {
-            final var keyStore = vapidService.getKeyStore();
+            final var keyStore = keystoreService.getKeyStore();
             pushService = new PushService(keyStore.getPublicKey(), keyStore.getPrivateKey())
-                    .setSubject(vapidConfiguration.getSubject());
+                    .setSubject(webPushConfiguration.getEmailAddress());
         }
         catch (final GeneralSecurityException e) {
             LOGGER.error("Unable to create push service", e);
@@ -52,7 +63,15 @@ public class NotificationService extends VAPIDConfigurationAware {
         }
     }
 
-    public NotificationStatus notifyAll(final PushMessage message, Urgency urgency) {
+    /**
+     * This method will send the {@link PushMessage} to all of the current subscribers, with the provided
+     * {@link Urgency}.
+     *
+     * @param message The {@link PushMessage} to send
+     * @param urgency The {@link Urgency} of the message
+     * @return A {@link NotificationStatus} instance, success or fail metrics
+     */
+    public NotificationStatus notifyAll(final PushMessage message, final Urgency urgency) {
 
         if (!subscriptionService.hasSubscriptions()) {
             return NotificationStatus.info("No current subscribers.");
@@ -99,6 +118,12 @@ public class NotificationService extends VAPIDConfigurationAware {
         return NotificationStatus.of(success, failed);
     }
 
+    /**
+     * Primary method to determine the status of the message sent to the notification push service.
+     *
+     * @param statusLine The {@link StatusLine} instance (returned from the HTTP call)
+     * @return TRUE if the message was delivered successfully, otherwise FALSE
+     */
     private boolean isOK(final StatusLine statusLine) {
         return statusLine.getStatusCode() >= 200 && statusLine.getStatusCode() < 300;
     }

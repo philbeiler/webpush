@@ -4,22 +4,31 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.springboot.webpush.common.service.VAPIDService;
+import com.springboot.webpush.common.service.KeyStoreService;
 
+/**
+ * The {@link VAPIDController} is responsible to returning the KeyStore public key.
+ */
 @RestController
+@Deprecated
 public class VAPIDController {
-    private final VAPIDService vapidService;
+    private final KeyStoreService keyStoreService;
 
-    public VAPIDController(final VAPIDService vapidService) {
+    /**
+     * Constructs a new instance of the {@link VAPIDController}.
+     *
+     * @param keyStoreService The {@link KeyStoreService} instance
+     */
+    public VAPIDController(final KeyStoreService keyStoreService) {
         super();
-        this.vapidService = vapidService;
+        this.keyStoreService = keyStoreService;
     }
 
     @GetMapping("/api/vapid-public")
     ResponseEntity<String> getVapidPublic() {
 
-        final var keyStore = vapidService.getKeyStore();
-        if (keyStore.valid()) {
+        final var keyStore = keyStoreService.getKeyStore();
+        if (keyStore.isValid()) {
             return ResponseEntity.ok(keyStore.getPublicKey());
         }
         return ResponseEntity.notFound().build();

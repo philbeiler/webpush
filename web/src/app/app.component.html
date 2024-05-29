@@ -7,7 +7,7 @@
     </mat-form-field>
     <div class="button-container">
       <button mat-raised-button (click)="subscribeClicked()">Subscribe</button>
-      <mat-icon *ngIf="subscription" style="color: green">check</mat-icon>
+      <mat-icon *ngIf="webPushService.isSubscribed()" style="color: green">check</mat-icon>
     </div>
     <div class="button-container">
       <button mat-raised-button (click)="unsubscribeClicked()">
@@ -21,8 +21,8 @@
     <div class="button-container">
       <button
         mat-raised-button
-        (click)="requestPushNotification()"
-        [disabled]="!subscription || !message.valid"
+        (click)="requestPushNotificationClicked()"
+        [disabled]="!webPushService.isSubscribed() || !message.valid"
       >
         Send me a push notification
       </button>

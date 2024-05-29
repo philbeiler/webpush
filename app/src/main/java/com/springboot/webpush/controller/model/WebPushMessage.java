@@ -1,7 +1,5 @@
 package com.springboot.webpush.controller.model;
 
-import org.springframework.util.StringUtils;
-
 import com.springboot.webpush.common.api.types.OnActionClickOperation;
 
 import nl.martijndwars.webpush.Urgency;
@@ -10,24 +8,17 @@ import nl.martijndwars.webpush.Urgency;
  * The external {@link WebPushMessage} contains the data required to generate a custom web notification.
  */
 public class WebPushMessage {
-    @Deprecated
-    private String                 message;
-
     private Urgency                urgency;
     private String                 title;
     private String                 body;
+    private String                 tag;
     private String                 iconURI;
     private String                 imageURI;
+    private String                 badgeURI;
+    private Boolean                renotify;
     private Boolean                requireInteraction;
     private OnActionClickOperation onActionClickOperation;
     private String                 onActionClickURI;
-
-    /**
-     * @return the urgency
-     */
-    public Urgency getUrgency() {
-        return urgency == null ? Urgency.NORMAL : urgency;
-    }
 
     /**
      * @param urgency the urgency to set
@@ -37,17 +28,24 @@ public class WebPushMessage {
     }
 
     /**
-     * @return the message
+     * @param onActionClickOperation the onActionClickOperation to set
      */
-    public String getMessage() {
-        return message;
+    public void setOnActionClickOperation(final OnActionClickOperation onActionClickOperation) {
+        this.onActionClickOperation = onActionClickOperation;
+    }
+
+    /**
+     * @return the urgency
+     */
+    public Urgency getUrgency() {
+        return urgency == null ? Urgency.NORMAL : urgency;
     }
 
     /**
      * @return the title
      */
     public String getTitle() {
-        return StringUtils.hasText(title) ? title : message;
+        return title;
     }
 
     /**
@@ -93,10 +91,24 @@ public class WebPushMessage {
     }
 
     /**
-     * @param onActionClickOperation the onActionClickOperation to set
+     * @return the tag
      */
-    public void setOnActionClickOperation(final OnActionClickOperation onActionClickOperation) {
-        this.onActionClickOperation = onActionClickOperation;
+    public String getTag() {
+        return tag;
+    }
+
+    /**
+     * @return the badgeURI
+     */
+    public String getBadgeURI() {
+        return badgeURI;
+    }
+
+    /**
+     * @return the renotify
+     */
+    public Boolean getRenotify() {
+        return renotify;
     }
 
 }

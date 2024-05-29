@@ -1,5 +1,7 @@
 package com.springboot.webpush.controller.converter;
 
+import java.time.Instant;
+
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -37,15 +39,20 @@ public class PushMessageConverter {
     public PushMessage convert(final WebPushMessage message) {
         return PushMessage.of(message.getTitle(),
                 StringUtils.hasText(message.getBody()) ? message.getBody() : webPushConfiguration.getDefaultBody(),
+                StringUtils.hasText(message.getTag()) ? message.getTag() : webPushConfiguration.getDefaultTag(),
                 StringUtils.hasText(message.getIconURI()) ? message.getIconURI()
                         : webPushConfiguration.getDefaultIconURI(),
                 StringUtils.hasText(message.getImageURI()) ? message.getImageURI()
                         : webPushConfiguration.getDefaultImageURI(),
+                StringUtils.hasText(message.getBadgeURI()) ? message.getBadgeURI()
+                        : webPushConfiguration.getDefaultBadgeURI(),
                 message.getOnActionClickOperation() != null ? message.getOnActionClickOperation()
                         : OnActionClickOperation.NOOP,
                 message.getOnActionClickURI(), //
+                Instant.now().toEpochMilli(),
+                message.getRenotify() != null ? message.getRenotify() : webPushConfiguration.isRenotify(),
                 message.getRequireInteraction() != null ? message.getRequireInteraction()
-                        : webPushConfiguration.getRequireInteraction());
+                        : webPushConfiguration.isRequireInteraction());
     }
 
 }

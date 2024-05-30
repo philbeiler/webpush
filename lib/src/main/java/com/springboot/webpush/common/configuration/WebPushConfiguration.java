@@ -1,6 +1,7 @@
 package com.springboot.webpush.common.configuration;
 
 import java.lang.invoke.MethodHandles;
+import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +9,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.StringUtils;
+
+import com.springboot.webpush.common.api.NotificationData;
+import com.springboot.webpush.common.api.OnActionClick;
+import com.springboot.webpush.common.api.types.OnActionClickOperation;
 
 import jakarta.annotation.PostConstruct;
 

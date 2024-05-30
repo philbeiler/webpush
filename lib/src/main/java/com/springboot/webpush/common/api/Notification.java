@@ -1,12 +1,9 @@
 package com.springboot.webpush.common.api;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.util.Assert;
 
-import com.springboot.webpush.common.api.types.OnActionClickOperation;
 
 /**
  * The {@link Notification} class is the primary message structure, as expected by the browser creators web push
@@ -15,7 +12,7 @@ import com.springboot.webpush.common.api.types.OnActionClickOperation;
 public class Notification {
     private final String                   title;
     private final String                   body;
-    private final Map<String, Object>      data;
+    private final NotificationData         data;
     private final List<Integer>            vibrate;
     private final List<NotificationAction> actions;
     private final String                   icon;
@@ -35,8 +32,6 @@ public class Notification {
      * @param icon                   The icon associated with the push message.
      * @param image                  The image associated with the push message.
      * @param badge                  The badge associated with the push message.
-     * @param onActionClickOperation The operation to perform when the notification is clicked on by the user.
-     * @param onActionClickURI       The URI to navigate to, when the notification is clicked on by the user.
      * @param timestamp              The timestamp associated with the push message.
      * @param renotify               If the notification will re-notify the user, true or false.
      * @param requireInteraction     Is user interaction required by this push message, true or false.
@@ -44,22 +39,20 @@ public class Notification {
     public Notification(final String title,
                         final String body,
                         final String tag,
+                        final NotificationData notificationData,
                         final String icon,
                         final String image,
                         final String badge,
-                        final OnActionClickOperation onActionClickOperation,
-                        final String onActionClickURI,
                         final long timestamp,
                         final boolean renotify,
                         final boolean requireInteraction) {
-        Assert.notNull(onActionClickOperation, "OnActionClickOperation cannot be null");
         Assert.notNull(title, "title cannot be null");
         Assert.notNull(body, "body cannot be null");
 
         this.title              = title;
         this.body               = body;
         this.tag                = tag;
-        this.data               = new HashMap<>();
+        this.data               = notificationData;
         this.vibrate            = List.of(180, 20, 80, 20, 80, 20, 180, 20, 180);
         this.renotify           = renotify;
         this.requireInteraction = requireInteraction;
@@ -68,14 +61,6 @@ public class Notification {
         this.image              = image;
         this.badge              = badge;
         this.timestamp          = timestamp;
-
-        // The key of this map should match the action property of the Action class this entry will correspond to
-        // Or "default" for clicking the notification itself.
-        final var onActionClickMap = new HashMap<String, OnActionClick>();
-        if (onActionClickOperation != OnActionClickOperation.NOOP) {
-            data.put("onActionClick", onActionClickMap);
-            onActionClickMap.put("default", new OnActionClick(onActionClickOperation, onActionClickURI));
-        }
     }
 
     /**
@@ -109,7 +94,7 @@ public class Notification {
     /**
      * @return The internal data included with the push message.
      */
-    public Map<String, Object> getData() {
+    public NotificationData getData() {
         return data;
     }
 

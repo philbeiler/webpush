@@ -1,7 +1,5 @@
 package com.springboot.webpush.common.api;
 
-import com.springboot.webpush.common.api.types.OnActionClickOperation;
-
 /**
  * The message that will be sent to the user's browser (PushMessage).
  */
@@ -48,15 +46,14 @@ public class PushMessage {
     public static PushMessage of(final String title,
                                  final String body,
                                  final String tag,
+                                 final NotificationData notificationData,
                                  final String iconURI,
                                  final String imageURI,
                                  final String badgeURI,
-                                 final OnActionClickOperation onActionClickOperation,
-                                 final String onActionClickURI,
                                  final long timestamp,
                                  final boolean renotify,
                                  final boolean requiresInteraction) {
-        return new PushMessage(new Notification(title, body, tag, iconURI, imageURI, badgeURI, onActionClickOperation,
-                onActionClickURI, timestamp, renotify, requiresInteraction));
+        return new PushMessage(new Notification(title, body, tag, notificationData, iconURI, imageURI, badgeURI,
+            timestamp, renotify, requiresInteraction));
     }
 }

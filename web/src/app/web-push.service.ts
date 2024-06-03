@@ -91,7 +91,7 @@ export class WebPushService {
   }
 
   requestPushNotification(ip: string, message: WebPushMessage): Observable<unknown> {
-    return this.http.put(`{ip}/api/notify-all`, message);//
+    return this.http.put(`${ip}/api/notify-all`, message);//
   }
 
   isSubscribed(): boolean {

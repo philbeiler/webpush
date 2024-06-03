@@ -13,6 +13,14 @@ public class NotificationData {
         this.onActionClick = onActionClick;
     }
 
+    public void setOnActionClick(HashMap<String, OnActionClick> onActionClick) {
+        this.onActionClick = onActionClick;
+    }
+
+    public HashMap<String, OnActionClick> getOnActionClick() {
+        return onActionClick;
+    }
+
     public static NotificationData of(OnActionClickOperation onActionClickOperation, String onActionClickURI) {
         HashMap<String, OnActionClick> onActionClickMap = new HashMap<>(); 
         if (onActionClickOperation != OnActionClickOperation.NOOP) {

@@ -1,21 +1,19 @@
 package com.springboot.webpush.exception;
 
+/**
+ * InvalidHeaderFieldException class.
+ */
 public class InvalidHeaderFieldException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    private String            message;
-
+    /**
+     * Constructs a new {@link InvalidHeaderFieldException} instance.
+     *
+     * @param message The exception message.
+     */
     public InvalidHeaderFieldException(final String message) {
-        this.setMessage(message);
+        super(message);
     }
 
-    @Override
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(final String message) {
-        this.message = message;
-    }
 }

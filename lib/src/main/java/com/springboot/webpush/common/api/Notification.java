@@ -1,98 +1,148 @@
 package com.springboot.webpush.common.api;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import org.springframework.util.Assert;
 
+/**
+ * The {@link Notification} class is the primary message structure, as expected by the browser creators web push
+ * services.
+ */
 public class Notification {
-    //private static final String OPEN_PWA_ACTION = "openPWA";
-
-    private final String               title;
-    private final String               body;
-    private final Map<String, Object>  data;
-    private final List<Integer>        vibrate;
-    private final List<Action>         actions;
-    private final String               icon;
-    private final String               image;
-    private final boolean              requireInteraction;
+    private final String                   title;
+    private final String                   body;
+    private final NotificationData         data;
+    private final List<Integer>            vibrate;
+    private final List<NotificationAction> actions;
+    private final String                   icon;
+    private final String                   image;
+    private final String                   tag;
+    private final String                   badge;
+    private final long                     timestamp;
+    private final boolean                  renotify;
+    private final boolean                  requireInteraction;
 
     /**
-     * @param title
+     * Constructs a new {@link Notification} instance.
+     *
+     * @param title              The title associated with the push message.
+     * @param body               The body associated with the push message.
+     * @param tag                The tag associated with the push message.
+     * @param notificationData   The onActionClick / notification data.
+     * @param icon               The icon associated with the push message.
+     * @param image              The image associated with the push message.
+     * @param badge              The badge associated with the push message.
+     * @param timestamp          The timestamp associated with the push message.
+     * @param renotify           If the notification will re-notify the user, true or false.
+     * @param requireInteraction Is user interaction required by this push message, true or false.
      */
-    public Notification(final String title) {
-        final List<Integer> vibrate = List.of(180, 20, 80, 20, 80, 20, 180, 20, 180);
-        this.title              = title;
-        this.body               = "What an exciting notification!";
-        this.data               = new HashMap<>();
-        this.vibrate            = vibrate;
-        this.requireInteraction = true;
-        //this.actions              = List.of(new Action("Open PWA", "", OPEN_PWA_ACTION));
-        this.actions            = List.of();         
-        this.icon               = "https://cdn-icons-png.flaticon.com/512/3845/3845831.png";
-        this.image              = "https://cdn-teams-slug.flaticon.com/google.jpg";
+    public Notification(final String title,
+                        final String body,
+                        final String tag,
+                        final NotificationData notificationData,
+                        final String icon,
+                        final String image,
+                        final String badge,
+                        final long timestamp,
+                        final boolean renotify,
+                        final boolean requireInteraction) {
+        Assert.notNull(title, "title cannot be null");
+        Assert.notNull(body, "body cannot be null");
 
-        // The key of this map should match the action property of the Action class this entry will correspond to
-        // Or "default" for clicking the notification itself.
-        var onActionClickMap = new HashMap<String, OnActionClick>();
-        onActionClickMap.put("default", new OnActionClick("focusLastFocusedOrOpen", null));
-        //onActionClickMap.put(OPEN_PWA_ACTION, new OnActionClick("focusLastFocusedOrOpen", "https://angular.jimboradleyha.duckdns.org"));
-        this.data.put("onActionClick", onActionClickMap);
+        this.title              = title;
+        this.body               = body;
+        this.tag                = tag;
+        this.data               = notificationData;
+        this.vibrate            = List.of(180, 20, 80, 20, 80, 20, 180, 20, 180);
+        this.renotify           = renotify;
+        this.requireInteraction = requireInteraction;
+        this.actions            = List.of();
+        this.icon               = icon;
+        this.image              = image;
+        this.badge              = badge;
+        this.timestamp          = timestamp;
     }
 
     /**
      * @return the actions
      */
-    public List<Action> getActions() {
+    public List<NotificationAction> getActions() {
         return actions;
     }
 
     /**
-     * @return the title
+     * @return The title of the push message.
      */
     public String getTitle() {
         return title;
     }
 
     /**
-     * @return the body
+     * @return The body of the push message
      */
     public String getBody() {
         return body;
     }
 
     /**
-     * ng serve --configuration=production --prebundle=true --host 0.0.0.0
-     *
-     * @return the vibrate
+     * @return The vibration pattern to be used my mobile devices.
      */
     public List<Integer> getVibrate() {
         return vibrate;
     }
 
     /**
-     * @return the data
+     * @return The internal data included with the push message.
      */
-    public Map<String, Object> getData() {
+    public NotificationData getData() {
         return data;
     }
 
     /**
-     * @return the icon
+     * @return The icon URI.
      */
     public String getIcon() {
         return icon;
     }
 
     /**
-     * @return the image
+     * @return The image URI.
      */
     public String getImage() {
         return image;
     }
 
     /**
-     * @return the requireInteraction
+     * @return The tag of the push message.
+     */
+    public String getTag() {
+        return tag;
+    }
+
+    /**
+     * @return The badge URI.
+     */
+    public String getBadge() {
+        return badge;
+    }
+
+    /**
+     * @return The time stamp associated with the push message.
+     */
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    /**
+     * @return The renotify option, should the notification re-notify the user if not acted upon, true or false.
+     */
+    public boolean isRenotify() {
+        return renotify;
+    }
+
+    /**
+     * @return The requires user interaction indicator. When TRUE, the user must click on the notification; when false,
+     *         the notification will disappear after some predetermined time.
      */
     public boolean isRequireInteraction() {
         return requireInteraction;

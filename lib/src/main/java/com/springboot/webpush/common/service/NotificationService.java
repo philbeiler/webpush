@@ -24,12 +24,15 @@ import nl.martijndwars.webpush.PushService;
 import nl.martijndwars.webpush.Urgency;
 
 /**
- * The {@link NotificationService} is responsible for sending a {@link PushMessage} to all of the current application
- * subscribers.
+ * The {@link NotificationService} is responsible for sending a
+ * {@link PushMessage} to all of the current application subscribers.
  */
 @Service
 public class NotificationService {
-    private static final Logger       LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final int          HTTP_REDIRECT_CODES = 300;
+    private static final int          HTTP_SUCCESS_CODES  = 200;
+    private static final Logger       LOGGER              = LoggerFactory
+            .getLogger(MethodHandles.lookup().lookupClass());
 
     private final SubscriptionService subscriptionService;
     private final PushService         pushService;
@@ -64,8 +67,8 @@ public class NotificationService {
     }
 
     /**
-     * This method will send the {@link PushMessage} to all of the current subscribers, with the provided
-     * {@link Urgency}.
+     * This method will send the {@link PushMessage} to all of the current
+     * subscribers, with the provided {@link Urgency}.
      *
      * @param message The {@link PushMessage} to send
      * @param urgency The {@link Urgency} of the message
@@ -119,12 +122,14 @@ public class NotificationService {
     }
 
     /**
-     * Primary method to determine the status of the message sent to the notification push service.
+     * Primary method to determine the status of the message sent to the
+     * notification push service.
      *
-     * @param statusLine The {@link StatusLine} instance (returned from the HTTP call)
+     * @param statusLine The {@link StatusLine} instance (returned from the HTTP
+     *                   call)
      * @return TRUE if the message was delivered successfully, otherwise FALSE
      */
     private boolean isOK(final StatusLine statusLine) {
-        return statusLine.getStatusCode() >= 200 && statusLine.getStatusCode() < 300;
+        return statusLine.getStatusCode() >= HTTP_SUCCESS_CODES && statusLine.getStatusCode() < HTTP_REDIRECT_CODES;
     }
 }

@@ -12,8 +12,9 @@ import org.springframework.util.StringUtils;
 import jakarta.annotation.PostConstruct;
 
 /**
- * The {@link WebPushConfiguration} specifies the configuration of the {@link WebPushConfiguration} key store, used for
- * encrypting the push messages.
+ * The {@link WebPushConfiguration} specifies the configuration of the
+ * {@link WebPushConfiguration} key store, used for encrypting the push
+ * messages.
  */
 @Configuration
 @ConfigurationProperties(prefix = "webpush")
@@ -31,25 +32,34 @@ public class WebPushConfiguration {
     /**
      * Constructs a new {@link WebPushConfiguration} instance.
      *
-     * @param emailAddress       The email address to use when sending push messages, the external administrator email
-     *                           address for the application.
-     * @param defaultBody        The default body of the notification, if none is provided by the caller.
-     * @param defaultTag         The default tag for the notification, if none is provided by the caller.
-     * @param defaultImageURI    The default image URI for the notification, if none is provided by the caller.
-     * @param defaultIconURI     The default icon URI for the notification, if none is provided by the caller.
-     * @param defaultBadgeURI    The default badge URI for the notification, in not is provided by the caller.
-     * @param renotify           TRUE or FALSE, if the default behavior for the notification will re-notify the user.
-     * @param requireInteraction TRUE or FALSE if the default behavior for the notification requires user interaction.
+     * @param emailAddress       The email address to use when sending push
+     *                           messages, the external administrator email address
+     *                           for the application.
+     * @param defaultBody        The default body of the notification, if none is
+     *                           provided by the caller.
+     * @param defaultTag         The default tag for the notification, if none is
+     *                           provided by the caller.
+     * @param defaultImageURI    The default image URI for the notification, if none
+     *                           is provided by the caller.
+     * @param defaultIconURI     The default icon URI for the notification, if none
+     *                           is provided by the caller.
+     * @param defaultBadgeURI    The default badge URI for the notification, in not
+     *                           is provided by the caller.
+     * @param renotify           TRUE or FALSE, if the default behavior for the
+     *                           notification will re-notify the user.
+     * @param requireInteraction TRUE or FALSE if the default behavior for the
+     *                           notification requires user interaction.
      *
      */
+    @SuppressWarnings("checkstyle:parameternumber")
     public WebPushConfiguration(@Value("${email:mailto:admin@domain.com}") final String emailAddress,
-                                @Value("${default.body:#{null}}") final String defaultBody,
-                                @Value("${default.tag:#{null}}") final String defaultTag,
-                                @Value("${default.imageURI:#{null}}") final String defaultImageURI,
-                                @Value("${default.iconURI:#{null}}") final String defaultIconURI,
-                                @Value("${default.badgeURI:#{null}}") final String defaultBadgeURI,
-                                @Value("${default.renotify:#{null}}") final Boolean renotify,
-                                @Value("${default.requireInteraction:#{null}}") final Boolean requireInteraction) {
+            @Value("${default.body:#{null}}") final String defaultBody,
+            @Value("${default.tag:#{null}}") final String defaultTag,
+            @Value("${default.imageURI:#{null}}") final String defaultImageURI,
+            @Value("${default.iconURI:#{null}}") final String defaultIconURI,
+            @Value("${default.badgeURI:#{null}}") final String defaultBadgeURI,
+            @Value("${default.renotify:#{null}}") final Boolean renotify,
+            @Value("${default.requireInteraction:#{null}}") final Boolean requireInteraction) {
         this.emailAddress       = emailAddress;
         this.defaultBody        = StringUtils.hasText(defaultBody) ? defaultBody : "What an exciting notification!";
         this.defaultTag         = StringUtils.hasText(defaultTag) ? defaultTag : "TAG";

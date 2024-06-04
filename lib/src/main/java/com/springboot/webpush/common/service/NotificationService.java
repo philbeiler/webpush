@@ -52,17 +52,17 @@ public class NotificationService {
         this.subscriptionService = subscriptionService;
         this.objectMapper        = objectMapper;
 
-        PushService pushService = null;
+        PushService aPushService = null;
         try {
             final var keyStore = keystoreService.getKeyStore();
-            pushService = new PushService(keyStore.getPublicKey(), keyStore.getPrivateKey())
+            aPushService = new PushService(keyStore.getPublicKey(), keyStore.getPrivateKey())
                     .setSubject(webPushConfiguration.getEmailAddress());
         }
         catch (final GeneralSecurityException e) {
             LOGGER.error("Unable to create push service", e);
         }
         finally {
-            this.pushService = pushService;
+            this.pushService = aPushService;
         }
     }
 

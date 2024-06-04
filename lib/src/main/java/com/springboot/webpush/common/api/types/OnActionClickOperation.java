@@ -1,7 +1,8 @@
 package com.springboot.webpush.common.api.types;
 
 /**
- * The {@link OnActionClickOperation} enumeration represents all of the actions that can happen on a push message.
+ * The {@link OnActionClickOperation} enumeration represents all of the actions
+ * that can happen on a push message.
  */
 public enum OnActionClickOperation {
     /**
@@ -13,13 +14,13 @@ public enum OnActionClickOperation {
      */
     OPEN_WINDOW("openWindow"),
     /**
-     * Focuses the last focused client. If there is no client open, then it opens a new tab at the specified URL. (URL
-     * is optional)
+     * Focuses the last focused client. If there is no client open, then it opens a
+     * new tab at the specified URL. (URL is optional)
      */
     FOCUS_LAST("focusLastFocusedOrOpen"),
     /**
-     * Focuses the last focused client and navigates it to the specified URL. If there is no client open, then it opens
-     * a new tab at the specified URL.
+     * Focuses the last focused client and navigates it to the specified URL. If
+     * there is no client open, then it opens a new tab at the specified URL.
      */
     NAVIGATE_LAST("navigateLastFocusedOrOpen"),
     /**
@@ -34,7 +35,7 @@ public enum OnActionClickOperation {
      *
      * @param operation The operation to perform, in string format.
      */
-    private OnActionClickOperation(final String operation) {
+    OnActionClickOperation(final String operation) {
         this.operation = operation;
     }
 

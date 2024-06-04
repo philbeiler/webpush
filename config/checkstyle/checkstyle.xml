@@ -80,7 +80,8 @@ page at http://checkstyle.sourceforge.net/config.html -->
         <module name="ParameterNumber"/>
 	    <module name="FinalClass"/>
 	    <module name="VisibilityModifier"/>
-	    
+	    <module name="HiddenField"/>
+	    <module name="ClassMemberImpliedModifier" />
         <!--
 
         IMPORT CHECKS

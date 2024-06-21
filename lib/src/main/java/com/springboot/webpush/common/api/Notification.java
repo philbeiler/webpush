@@ -5,10 +5,16 @@ import java.util.List;
 import org.springframework.util.Assert;
 
 /**
- * The {@link Notification} class is the primary message structure, as expected by the browser creators web push
- * services.
+ * The {@link Notification} class is the primary message structure, as expected
+ * by the browser creators web push services.
  */
 public class Notification {
+    private static final int               VIBRATE_MEDIUM          = 80;
+    private static final int               VIBRATE_SHORT           = 20;
+    private static final int               VIBRATE_LONG            = 180;
+    private static final List<Integer>     DEFAULT_VIBRATE_PATTERN = List.of(VIBRATE_LONG, VIBRATE_SHORT,
+            VIBRATE_MEDIUM, VIBRATE_SHORT, VIBRATE_MEDIUM, VIBRATE_SHORT, VIBRATE_LONG, VIBRATE_SHORT, VIBRATE_LONG);
+
     private final String                   title;
     private final String                   body;
     private final NotificationData         data;
@@ -33,19 +39,15 @@ public class Notification {
      * @param image              The image associated with the push message.
      * @param badge              The badge associated with the push message.
      * @param timestamp          The timestamp associated with the push message.
-     * @param renotify           If the notification will re-notify the user, true or false.
-     * @param requireInteraction Is user interaction required by this push message, true or false.
+     * @param renotify           If the notification will re-notify the user, true
+     *                           or false.
+     * @param requireInteraction Is user interaction required by this push message,
+     *                           true or false.
      */
-    public Notification(final String title,
-                        final String body,
-                        final String tag,
-                        final NotificationData notificationData,
-                        final String icon,
-                        final String image,
-                        final String badge,
-                        final long timestamp,
-                        final boolean renotify,
-                        final boolean requireInteraction) {
+    @SuppressWarnings("checkstyle:parameternumber")
+    public Notification(final String title, final String body, final String tag,
+            final NotificationData notificationData, final String icon, final String image, final String badge,
+            final long timestamp, final boolean renotify, final boolean requireInteraction) {
         Assert.notNull(title, "title cannot be null");
         Assert.notNull(body, "body cannot be null");
 
@@ -53,7 +55,7 @@ public class Notification {
         this.body               = body;
         this.tag                = tag;
         this.data               = notificationData;
-        this.vibrate            = List.of(180, 20, 80, 20, 80, 20, 180, 20, 180);
+        this.vibrate            = DEFAULT_VIBRATE_PATTERN;
         this.renotify           = renotify;
         this.requireInteraction = requireInteraction;
         this.actions            = List.of();
@@ -134,15 +136,17 @@ public class Notification {
     }
 
     /**
-     * @return The renotify option, should the notification re-notify the user if not acted upon, true or false.
+     * @return The renotify option, should the notification re-notify the user if
+     *         not acted upon, true or false.
      */
     public boolean isRenotify() {
         return renotify;
     }
 
     /**
-     * @return The requires user interaction indicator. When TRUE, the user must click on the notification; when false,
-     *         the notification will disappear after some predetermined time.
+     * @return The requires user interaction indicator. When TRUE, the user must
+     *         click on the notification; when false, the notification will
+     *         disappear after some predetermined time.
      */
     public boolean isRequireInteraction() {
         return requireInteraction;

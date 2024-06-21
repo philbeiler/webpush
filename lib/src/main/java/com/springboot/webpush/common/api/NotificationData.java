@@ -5,17 +5,20 @@ import java.util.HashMap;
 import com.springboot.webpush.common.api.types.OnActionClickOperation;
 
 /**
- * The {@link NotificationData} instance managed the on action click information.
+ * The {@link NotificationData} instance managed the on action click
+ * information.
  */
-public class NotificationData {
-    // The key of this map should match the action property of the NotificationAction class this entry will correspond
+public final class NotificationData {
+    // The key of this map should match the action property of the
+    // NotificationAction class this entry will correspond
     // to Or "default" for clicking the notification itself.
-    HashMap<String, OnActionClick> onActionClick;
+    private HashMap<String, OnActionClick> onActionClick;
 
     /**
      * Constructs a new instance of the {@link NotificationData} class.
      *
-     * @param onActionClick The {@link OnActionClick} instance to add to the notification.
+     * @param onActionClick The {@link OnActionClick} instance to add to the
+     *                      notification.
      */
     private NotificationData(final HashMap<String, OnActionClick> onActionClick) {
         this.onActionClick = onActionClick;
@@ -46,7 +49,7 @@ public class NotificationData {
      * @return A new {@link NotificationData} instance.
      */
     public static NotificationData of(final OnActionClickOperation onActionClickOperation,
-                                      final String onActionClickURI) {
+            final String onActionClickURI) {
         final var onActionClickMap = new HashMap<String, OnActionClick>();
         if (onActionClickOperation != OnActionClickOperation.NOOP) {
             onActionClickMap.put("default", new OnActionClick(onActionClickOperation, onActionClickURI));

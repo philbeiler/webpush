@@ -1,4 +1,4 @@
-package com.springboot.webpush.common.service;
+package com.springboot.webpush.service;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
@@ -13,26 +13,28 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.springboot.webpush.common.api.KeyStore;
-import com.springboot.webpush.common.configuration.KeyStoreConfiguration;
+import com.springboot.webpush.common.api.KeyStoreDiskStoreConfiguration;
+import com.springboot.webpush.common.api.KeyStoreStorageService;
 
 /**
- * The {@link StorageService} is used to preserve the public/private key used to encrypt the push message. The keys are
- * stored on the local file system as specified by the {@link KeyStoreConfiguration} instance.
+ * The {@link KeyStoreDiskStorageService} is used to preserve the public/private key used to encrypt the push message.
+ * The keys are stored on the local file system as specified by the {@link KeyStoreDiskStoreConfiguration} instance.
  */
 @Service
-public class StorageService {
-    private static final Logger         LOGGER       = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+public class KeyStoreDiskStorageService implements KeyStoreStorageService {
+    private static final Logger                  LOGGER       = LoggerFactory
+            .getLogger(MethodHandles.lookup().lookupClass());
 
-    private final ObjectMapper          objectMapper = new ObjectMapper(new YAMLFactory());
-    private final KeyStoreConfiguration keystoreConfiguration;
+    private final ObjectMapper                   objectMapper = new ObjectMapper(new YAMLFactory());
+    private final KeyStoreDiskStoreConfiguration keystoreConfiguration;
 
     /**
-     * Constructs a new {@link StorageService} instance.
+     * Constructs a new {@link KeyStoreDiskStorageService} instance.
      *
-     * @param keystoreConfiguration The {@link KeyStoreConfiguration} instance.
+     * @param keystoreConfiguration The {@link KeyStoreDiskStoreConfiguration} instance.
      *
      */
-    public StorageService(final KeyStoreConfiguration keystoreConfiguration) {
+    public KeyStoreDiskStorageService(final KeyStoreDiskStoreConfiguration keystoreConfiguration) {
         super();
         this.keystoreConfiguration = keystoreConfiguration;
     }
@@ -44,6 +46,7 @@ public class StorageService {
      * @param publicKey  The public key.
      * @return Returns the {@link KeyStore} instance. Optional.empty() is returned if the data could not be stored.
      */
+    @Override
     public Optional<KeyStore> save(final String privateKey, final String publicKey) {
         final var rc = new KeyStore();
         rc.setPrivateKey(privateKey);
@@ -57,6 +60,7 @@ public class StorageService {
      * @return The {@link KeyStore} instance from storage. Optional.empty() is returned if the data could not be
      *         retrieved.
      */
+    @Override
     public Optional<KeyStore> load() {
         try {
             final var storage = keystoreConfiguration.getStorage();
@@ -80,6 +84,7 @@ public class StorageService {
      *
      * @return The {@link KeyStore} instance from storage. Optional.empty() is returned if the data could not be saved.
      */
+    @Override
     public Optional<KeyStore> save(final KeyStore keyStore) {
         Assert.notNull(keyStore, "Keystore cannot be null");
         final var writer = objectMapper.writer(new DefaultPrettyPrinter());

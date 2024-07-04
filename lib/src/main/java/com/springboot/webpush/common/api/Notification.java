@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.util.Assert;
 
 /**
- * The {@link Notification} class is the primary message structure, as expected
- * by the browser creators web push services.
+ * The {@link Notification} class is the primary message structure, as expected by the browser creators web push
+ * services.
  */
 public class Notification {
     private static final int               VIBRATE_MEDIUM          = 80;
@@ -39,15 +39,20 @@ public class Notification {
      * @param image              The image associated with the push message.
      * @param badge              The badge associated with the push message.
      * @param timestamp          The timestamp associated with the push message.
-     * @param renotify           If the notification will re-notify the user, true
-     *                           or false.
-     * @param requireInteraction Is user interaction required by this push message,
-     *                           true or false.
+     * @param renotify           If the notification will re-notify the user, true or false.
+     * @param requireInteraction Is user interaction required by this push message, true or false.
      */
     @SuppressWarnings("checkstyle:parameternumber")
-    public Notification(final String title, final String body, final String tag,
-            final NotificationData notificationData, final String icon, final String image, final String badge,
-            final long timestamp, final boolean renotify, final boolean requireInteraction) {
+    public Notification(final String title,
+                        final String body,
+                        final String tag,
+                        final NotificationData notificationData,
+                        final String icon,
+                        final String image,
+                        final String badge,
+                        final long timestamp,
+                        final boolean renotify,
+                        final boolean requireInteraction) {
         Assert.notNull(title, "title cannot be null");
         Assert.notNull(body, "body cannot be null");
 
@@ -136,17 +141,15 @@ public class Notification {
     }
 
     /**
-     * @return The renotify option, should the notification re-notify the user if
-     *         not acted upon, true or false.
+     * @return The renotify option, should the notification re-notify the user if not acted upon, true or false.
      */
     public boolean isRenotify() {
         return renotify;
     }
 
     /**
-     * @return The requires user interaction indicator. When TRUE, the user must
-     *         click on the notification; when false, the notification will
-     *         disappear after some predetermined time.
+     * @return The requires user interaction indicator. When TRUE, the user must click on the notification; when false,
+     *         the notification will disappear after some predetermined time.
      */
     public boolean isRequireInteraction() {
         return requireInteraction;
@@ -154,7 +157,10 @@ public class Notification {
 
     @Override
     public String toString() {
-        return "Notification [title=" + title + "]";
+        return "Notification [title=" + title + ", body=" + body + ", data=" + data + ", vibrate=" + vibrate
+                + ", actions=" + actions + ", icon=" + icon + ", image=" + image + ", tag=" + tag + ", badge=" + badge
+                + ", timestamp=" + timestamp + ", renotify=" + renotify + ", requireInteraction=" + requireInteraction
+                + "]";
     }
 
 }

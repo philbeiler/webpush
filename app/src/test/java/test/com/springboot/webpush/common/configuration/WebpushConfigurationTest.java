@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import com.springboot.webpush.common.configuration.WebPushConfiguration;
+import com.springboot.webpush.config.WebPushConfiguration;
 
 /**
  * {@link WebpushConfigurationTest} class.
@@ -28,7 +28,7 @@ class WebpushConfigurationTest {
         final var config = new WebPushConfiguration(EMAIL_ADDRESS, null /* body */, null /* tag */, null /* image */,
                 null /* icon */, null /* badge */, Boolean.TRUE, Boolean.FALSE);
 
-        assertEquals(EMAIL_ADDRESS, config.getEmailAddress());
+        assertEquals(EMAIL_ADDRESS, config.getAdminEmailAddress());
         assertEquals(BODY, config.getDefaultBody());
         assertEquals(TAG, config.getDefaultTag());
         assertEquals(ICON, config.getDefaultIconURI());

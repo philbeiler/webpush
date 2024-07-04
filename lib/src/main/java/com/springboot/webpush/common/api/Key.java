@@ -14,7 +14,8 @@ public class Key {
      * @param p256dh The Diffie-Hellman key
      * @param auth   The authentication key
      */
-    public Key(final String p256dh, final String auth) {
+    public Key(final String p256dh,
+               final String auth) {
         this.p256dh = p256dh;
         this.auth   = auth;
     }

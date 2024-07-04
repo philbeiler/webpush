@@ -1,4 +1,4 @@
-package com.springboot.webpush.common.service;
+package com.springboot.webpush.service;
 
 import java.lang.invoke.MethodHandles;
 import java.util.Collection;
@@ -9,14 +9,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.springboot.webpush.common.api.BrowserSubscriptionService;
 import com.springboot.webpush.common.api.PushSubscription;
 
 /**
- * The {@link SubscriptionService} manages the user's application subscriptions, allowing them to subscribe and
- * unsubscribe to the message push service.
+ * The {@link InMemoryBrowserSubscriptionService} manages the user's application subscriptions, allowing them to
+ * subscribe and unsubscribe to the message push service.
  */
 @Service
-public class SubscriptionService {
+public class InMemoryBrowserSubscriptionService implements BrowserSubscriptionService {
     private static final Logger                 LOGGER                 = LoggerFactory
             .getLogger(MethodHandles.lookup().lookupClass());
 
@@ -27,6 +28,7 @@ public class SubscriptionService {
      *
      * @param subscription The {@link PushSubscription} instance, from the user's browser.
      */
+    @Override
     public void subscribe(final PushSubscription subscription) {
         final var existingSubscription = subscriptionsByBrowser.put(subscription.getEndpoint(), subscription);
         if (existingSubscription == null) {
@@ -43,6 +45,7 @@ public class SubscriptionService {
      * @param subscription The {@link PushSubscription} instance, from the user's browser.
      * @return Returns TRUE if the use we successfully unsubscribed from the service, otherwise FALSE
      */
+    @Override
     public boolean unsubscribe(final PushSubscription subscription) {
         final var existingSubscription = subscriptionsByBrowser.remove(subscription.getEndpoint());
         if (existingSubscription == null) {
@@ -55,10 +58,11 @@ public class SubscriptionService {
     }
 
     /**
-     * Convenience method to determin if anyone is currently subscribed to the message service.
+     * Convenience method to determine if anyone is currently subscribed to the message service.
      *
      * @return Returns TRUE if there are active subscriptions, otherwise FALSE
      */
+    @Override
     public boolean hasSubscriptions() {
         return !subscriptionsByBrowser.isEmpty();
     }
@@ -67,6 +71,7 @@ public class SubscriptionService {
      *
      * @return Returns a {@link Collection} of {@link PushSubscription} instances (subscriptions).
      */
+    @Override
     public Collection<PushSubscription> getSubscriptions() {
         return subscriptionsByBrowser.values();
     }

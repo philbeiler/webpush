@@ -1,4 +1,4 @@
-package com.springboot.webpush.common.configuration;
+package com.springboot.webpush.config;
 
 import java.lang.invoke.MethodHandles;
 
@@ -9,18 +9,19 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.StringUtils;
 
+import com.springboot.webpush.common.api.NotificationServiceConfiguration;
+
 import jakarta.annotation.PostConstruct;
 
 /**
- * The {@link WebPushConfiguration} specifies the configuration of the
- * {@link WebPushConfiguration} key store, used for encrypting the push
- * messages.
+ * The {@link WebPushConfiguration} specifies the configuration of the {@link WebPushConfiguration} key store, used for
+ * encrypting the push messages.
  */
 @Configuration
 @ConfigurationProperties(prefix = "webpush")
-public class WebPushConfiguration {
+public class WebPushConfiguration implements NotificationServiceConfiguration {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final String        emailAddress;
+    private final String        adminEmailAddress;
     private final String        defaultBody;
     private final String        defaultTag;
     private final String        defaultImageURI;
@@ -32,35 +33,27 @@ public class WebPushConfiguration {
     /**
      * Constructs a new {@link WebPushConfiguration} instance.
      *
-     * @param emailAddress       The email address to use when sending push
-     *                           messages, the external administrator email address
-     *                           for the application.
-     * @param defaultBody        The default body of the notification, if none is
-     *                           provided by the caller.
-     * @param defaultTag         The default tag for the notification, if none is
-     *                           provided by the caller.
-     * @param defaultImageURI    The default image URI for the notification, if none
-     *                           is provided by the caller.
-     * @param defaultIconURI     The default icon URI for the notification, if none
-     *                           is provided by the caller.
-     * @param defaultBadgeURI    The default badge URI for the notification, in not
-     *                           is provided by the caller.
-     * @param renotify           TRUE or FALSE, if the default behavior for the
-     *                           notification will re-notify the user.
-     * @param requireInteraction TRUE or FALSE if the default behavior for the
-     *                           notification requires user interaction.
+     * @param adminEmailAddress  The email address to use when sending push messages, the external administrator email
+     *                           address for the application.
+     * @param defaultBody        The default body of the notification, if none is provided by the caller.
+     * @param defaultTag         The default tag for the notification, if none is provided by the caller.
+     * @param defaultImageURI    The default image URI for the notification, if none is provided by the caller.
+     * @param defaultIconURI     The default icon URI for the notification, if none is provided by the caller.
+     * @param defaultBadgeURI    The default badge URI for the notification, in not is provided by the caller.
+     * @param renotify           TRUE or FALSE, if the default behavior for the notification will re-notify the user.
+     * @param requireInteraction TRUE or FALSE if the default behavior for the notification requires user interaction.
      *
      */
     @SuppressWarnings("checkstyle:parameternumber")
-    public WebPushConfiguration(@Value("${email:mailto:admin@domain.com}") final String emailAddress,
-            @Value("${default.body:#{null}}") final String defaultBody,
-            @Value("${default.tag:#{null}}") final String defaultTag,
-            @Value("${default.imageURI:#{null}}") final String defaultImageURI,
-            @Value("${default.iconURI:#{null}}") final String defaultIconURI,
-            @Value("${default.badgeURI:#{null}}") final String defaultBadgeURI,
-            @Value("${default.renotify:#{null}}") final Boolean renotify,
-            @Value("${default.requireInteraction:#{null}}") final Boolean requireInteraction) {
-        this.emailAddress       = emailAddress;
+    public WebPushConfiguration(@Value("${email:mailto:admin@domain.com}") final String adminEmailAddress,
+                                @Value("${default.body:#{null}}") final String defaultBody,
+                                @Value("${default.tag:#{null}}") final String defaultTag,
+                                @Value("${default.imageURI:#{null}}") final String defaultImageURI,
+                                @Value("${default.iconURI:#{null}}") final String defaultIconURI,
+                                @Value("${default.badgeURI:#{null}}") final String defaultBadgeURI,
+                                @Value("${default.renotify:#{null}}") final Boolean renotify,
+                                @Value("${default.requireInteraction:#{null}}") final Boolean requireInteraction) {
+        this.adminEmailAddress  = adminEmailAddress;
         this.defaultBody        = StringUtils.hasText(defaultBody) ? defaultBody : "What an exciting notification!";
         this.defaultTag         = StringUtils.hasText(defaultTag) ? defaultTag : "TAG";
         this.defaultIconURI     = StringUtils.hasText(defaultIconURI) ? defaultIconURI
@@ -78,7 +71,7 @@ public class WebPushConfiguration {
      */
     @PostConstruct
     void log() {
-        LOGGER.info("Email Address       [{}]", getEmailAddress());
+        LOGGER.info("Email Address       [{}]", getAdminEmailAddress());
         LOGGER.info("Body                [{}]", getDefaultBody());
         LOGGER.info("Tag                 [{}]", getDefaultTag());
         LOGGER.info("IconURI             [{}]", getDefaultIconURI());
@@ -89,10 +82,11 @@ public class WebPushConfiguration {
     }
 
     /**
-     * @return The emailAddress of external administrator.
+     * @return The adminEmailAddress of external administrator.
      */
-    public String getEmailAddress() {
-        return emailAddress;
+    @Override
+    public String getAdminEmailAddress() {
+        return adminEmailAddress;
     }
 
     /**

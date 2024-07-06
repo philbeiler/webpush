@@ -22,7 +22,8 @@ public class KeyStore {
      * @param privateKey The private key
      * @param publicKey  The public key
      */
-    public KeyStore(final String privateKey, final String publicKey) {
+    public KeyStore(final String privateKey,
+                    final String publicKey) {
         this.privateKey = privateKey;
         this.publicKey  = publicKey;
     }

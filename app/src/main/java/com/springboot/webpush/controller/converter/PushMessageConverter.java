@@ -8,7 +8,7 @@ import org.springframework.util.StringUtils;
 import com.springboot.webpush.common.api.NotificationData;
 import com.springboot.webpush.common.api.PushMessage;
 import com.springboot.webpush.common.api.types.OnActionClickOperation;
-import com.springboot.webpush.common.configuration.WebPushConfiguration;
+import com.springboot.webpush.config.WebPushConfiguration;
 import com.springboot.webpush.controller.model.WebPushMessage;
 
 /**

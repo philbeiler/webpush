@@ -20,8 +20,10 @@ public class PushSubscription {
      * @param expirationTime The expiration time of the subscription information.
      * @param keys           The keys for encrypting the push message.
      */
-    public PushSubscription(final String username, final String endpoint, final Integer expirationTime,
-            final Key keys) {
+    public PushSubscription(final String username,
+                            final String endpoint,
+                            final Integer expirationTime,
+                            final Key keys) {
         this.username       = username;
         this.endpoint       = endpoint;
         this.expirationTime = expirationTime;

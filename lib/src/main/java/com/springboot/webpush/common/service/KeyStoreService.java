@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.springboot.webpush.common.api.KeyStore;
+import com.springboot.webpush.common.api.KeyStoreStorageService;
 import com.springboot.webpush.common.util.KeyStoreGenerator;
 
 /**
@@ -16,16 +17,16 @@ import com.springboot.webpush.common.util.KeyStoreGenerator;
  */
 @Service
 public class KeyStoreService {
-    private static final Logger  LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final KeyStore       keyStore;
-    private final StorageService storageService;
+    private static final Logger          LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private final KeyStore               keyStore;
+    private final KeyStoreStorageService storageService;
 
     /**
      * Constructs a new instance of the {@link KeyStoreService}.
      *
-     * @param storageService The {@link StorageService} instance
+     * @param storageService The {@link KeyStoreDiskStorageService} instance
      */
-    public KeyStoreService(final StorageService storageService) {
+    public KeyStoreService(final KeyStoreStorageService storageService) {
         super();
         this.storageService = storageService;
 
@@ -53,7 +54,7 @@ public class KeyStoreService {
      *
      * @return The new {@link KeyStore} instance. Optional.empty() is returned if the key store could not be generated.
      */
-    public Optional<KeyStore> generate() {
+    public final Optional<KeyStore> generate() {
         final var ks = new KeyStoreGenerator().generate();
         if (ks.isPresent()) {
             storageService.save(ks.get());

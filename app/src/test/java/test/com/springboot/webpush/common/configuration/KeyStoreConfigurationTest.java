@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 
-import com.springboot.webpush.common.configuration.KeyStoreConfiguration;
+import com.springboot.webpush.config.KeyStoreDiskStoreConfiguration;
 
 class KeyStoreConfigurationTest {
 
@@ -14,7 +14,7 @@ class KeyStoreConfigurationTest {
 
     @Test
     void test() {
-        final var config = new KeyStoreConfiguration(PATH, NAME);
+        final var config = new KeyStoreDiskStoreConfiguration(PATH, NAME);
         assertNotNull(config);
         assertEquals(PATH + "/" + NAME, config.getStorage().getAbsolutePath());
     }

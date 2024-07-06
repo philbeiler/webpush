@@ -6,25 +6,25 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.function.EntityResponse;
 
-import com.springboot.webpush.common.service.SubscriptionService;
+import com.springboot.webpush.common.api.BrowserSubscriptionService;
 import com.springboot.webpush.controller.converter.WebPushSubscriptionConverter;
 import com.springboot.webpush.controller.model.WebPushSubscription;
 
 /**
- * The {@link SubscriptionController} is used to manage the user's subscription to the push notification service.
+ * The {@link BrowserSubscriptionController} is used to manage the user's subscription to the push notification service.
  */
 @RestController
-public class SubscriptionController {
-    private final SubscriptionService subscriptionService;
+public class BrowserSubscriptionController {
+    private final BrowserSubscriptionService browserSubscriptionService;
 
     /**
-     * Constructs a new {@link SubscriptionController} instance.
+     * Constructs a new {@link BrowserSubscriptionController} instance.
      *
-     * @param subscriptionService The {@link SubscriptionService} instance.
+     * @param browserSubscriptionService The {@link BrowserSubscriptionService} instance.
      */
-    public SubscriptionController(final SubscriptionService subscriptionService) {
+    public BrowserSubscriptionController(final BrowserSubscriptionService browserSubscriptionService) {
         super();
-        this.subscriptionService = subscriptionService;
+        this.browserSubscriptionService = browserSubscriptionService;
     }
 
     /**
@@ -35,7 +35,7 @@ public class SubscriptionController {
      */
     @PostMapping("/api/subscribe")
     ResponseEntity<String> subscribe(@RequestBody final WebPushSubscription subscription) {
-        subscriptionService.subscribe(WebPushSubscriptionConverter.convert(subscription));
+        browserSubscriptionService.subscribe(WebPushSubscriptionConverter.convert(subscription));
         return ResponseEntity.ok("OK");
     }
 
@@ -47,7 +47,7 @@ public class SubscriptionController {
      */
     @PostMapping("/api/unsubscribe")
     ResponseEntity<String> unsubscribe(@RequestBody final WebPushSubscription subscription) {
-        if (subscriptionService.unsubscribe(WebPushSubscriptionConverter.convert(subscription))) {
+        if (browserSubscriptionService.unsubscribe(WebPushSubscriptionConverter.convert(subscription))) {
             return ResponseEntity.ok("OK");
         }
         return ResponseEntity.notFound().build();

@@ -13,27 +13,30 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import com.springboot.webpush.common.configuration.KeyStoreConfiguration;
-import com.springboot.webpush.common.service.StorageService;
+import com.springboot.webpush.common.api.KeyStoreDiskStoreConfiguration;
+import com.springboot.webpush.common.api.KeyStoreStorageService;
 import com.springboot.webpush.common.util.KeyStoreGenerator;
+import com.springboot.webpush.service.KeyStoreDiskStorageService;
 
 /**
  *
  */
 class StorageServiceTest {
 
-    private static final String NEW_KEYSTORE_NAME = "PushKeyStoreTest.yaml";
-    private static final String PATH              = "/tmp";
+    private static final String                         NEW_KEYSTORE_NAME = "PushKeyStoreTest.yaml";
+    private static final String                         PATH              = "/tmp";
+    private static final File                           LOCATION          = new File(PATH + "/" + NEW_KEYSTORE_NAME);
+    private static final KeyStoreDiskStoreConfiguration CONFIG            = () -> LOCATION;
 
     @BeforeAll
     public static void set() {
         Security.addProvider(new BouncyCastleProvider());
-        new File(PATH + "/" + NEW_KEYSTORE_NAME).delete();
+        LOCATION.delete();
     }
 
     @Test
     void create() {
-        final var storageService = new StorageService(new KeyStoreConfiguration(PATH, NEW_KEYSTORE_NAME));
+        final KeyStoreStorageService storageService = new KeyStoreDiskStorageService(CONFIG);
         assertNotNull(storageService);
         var keys = storageService.load();
         assertTrue(keys.isEmpty());

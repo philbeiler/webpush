@@ -45,12 +45,12 @@ public class NotificationService {
      * @param subscriptionService              The {@link BrowserSubscriptionService} instance
      * @param keystoreService                  The {@link KeyStoreService} instance
      * @param objectMapper                     The {@link ObjectMapper} instance
-     * @param notificationSerivceConfiguration The {@link NotificationServiceConfiguration} instance
+     * @param notificationServiceConfiguration The {@link NotificationServiceConfiguration} instance
      */
     public NotificationService(final BrowserSubscriptionService subscriptionService,
                                final KeyStoreService keystoreService,
                                final ObjectMapper objectMapper,
-                               final NotificationServiceConfiguration notificationSerivceConfiguration) {
+                               final NotificationServiceConfiguration notificationServiceConfiguration) {
         super();
         this.subscriptionService = subscriptionService;
         this.objectMapper        = objectMapper;
@@ -59,7 +59,7 @@ public class NotificationService {
         try {
             final var keyStore = keystoreService.getKeyStore();
             aPushService = new PushService(keyStore.getPublicKey(), keyStore.getPrivateKey())
-                    .setSubject(notificationSerivceConfiguration.getAdminEmailAddress());
+                    .setSubject(notificationServiceConfiguration.getAdminEmailAddress());
         }
         catch (final GeneralSecurityException e) {
             LOGGER.error("Unable to create push service", e);

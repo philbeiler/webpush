@@ -25,21 +25,27 @@ public class NotificationAction {
     }
 
     /**
-     * @return the action
+     * Returns the action property.
+     *
+     * @return The action property.
      */
     public String getAction() {
         return action;
     }
 
     /**
-     * @return the title
+     * Returns the title property.
+     *
+     * @return The title property.
      */
     public String getTitle() {
         return title;
     }
 
     /**
-     * @return the icon
+     * Returns the icon property.
+     *
+     * @return The icon property.
      */
     public String getIcon() {
         return icon;

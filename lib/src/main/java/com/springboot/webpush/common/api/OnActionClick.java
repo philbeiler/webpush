@@ -22,6 +22,8 @@ public class OnActionClick {
     }
 
     /**
+     * Return the operation, IE, how to behave.
+     *
      * @return The operation, how to behave
      */
     public String getOperation() {
@@ -29,7 +31,9 @@ public class OnActionClick {
     }
 
     /**
-     * @return The url for navigation, optional, IE may be null.
+     * Return The url for navigation; Optional, IE may be null.
+     *
+     * @return The url for navigation.
      */
     public String getUrl() {
         return url;

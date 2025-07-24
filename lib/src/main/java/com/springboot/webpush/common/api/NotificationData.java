@@ -32,6 +32,7 @@ public final class NotificationData {
     }
 
     /**
+     * Returns the {@link OnActionClick} instance.
      *
      * @return Returns the {@link OnActionClick} instance.
      */
@@ -42,9 +43,10 @@ public final class NotificationData {
     /**
      * Factory method to create {@link NotificationData} instances.
      *
-     * @param onActionClickOperation The {@link OnActionClickOperation} action.
-     * @param onActionClickURI       The URI for the action to be performed.
-     * @return A new {@link NotificationData} instance.
+     * @param  onActionClickOperation The {@link OnActionClickOperation} action.
+     * @param  onActionClickURI       The URI for the action to be performed.
+     *
+     * @return                        A new {@link NotificationData} instance.
      */
     public static NotificationData of(final OnActionClickOperation onActionClickOperation,
                                       final String onActionClickURI) {
@@ -53,5 +55,10 @@ public final class NotificationData {
             onActionClickMap.put("default", new OnActionClick(onActionClickOperation, onActionClickURI));
         }
         return new NotificationData(onActionClickMap);
+    }
+
+    @Override
+    public String toString() {
+        return "NotificationData [onActionClick=" + onActionClick + "]";
     }
 }

@@ -42,8 +42,8 @@ public class KeyStoreGenerator {
         KeyPair keyPair;
         try {
             keyPair = generateKeyPair();
-            final var publicKey         = (ECPublicKey) keyPair.getPublic();
-            final var privateKey        = (ECPrivateKey) keyPair.getPrivate();
+            final var publicKey  = (ECPublicKey) keyPair.getPublic();
+            final var privateKey = (ECPrivateKey) keyPair.getPrivate();
 
             final var encodedPublicKey  = Utils.encode(publicKey);
             final var encodedPrivateKey = Utils.encode(privateKey);
@@ -60,13 +60,15 @@ public class KeyStoreGenerator {
     /**
      * Generate an EC keypair on the prime256v1 curve.
      *
+     * @return                                    The generated {@link KeyPair} instance.
+     *
      * @throws InvalidAlgorithmParameterException
      * @throws NoSuchProviderException
      * @throws NoSuchAlgorithmException
      */
     private KeyPair generateKeyPair()
             throws InvalidAlgorithmParameterException, NoSuchProviderException, NoSuchAlgorithmException {
-        final var parameterSpec    = ECNamedCurveTable.getParameterSpec(CURVE);
+        final var parameterSpec = ECNamedCurveTable.getParameterSpec(CURVE);
 
         final var keyPairGenerator = KeyPairGenerator.getInstance(ALGORITHM, PROVIDER_NAME);
         keyPairGenerator.initialize(parameterSpec);

@@ -16,6 +16,8 @@ public final class PushMessage {
     }
 
     /**
+     * Returns the {@link Notification} instance.
+     *
      * @return The {@link Notification} instance.
      */
     public Notification getNotification() {
@@ -30,17 +32,18 @@ public final class PushMessage {
     /**
      * Creates a new PushMessage instance.
      *
-     * @param title               The message to be sent.
-     * @param body                The body of the message to be sent.
-     * @param tag                 The tag of the message to be sent.
-     * @param notificationData    The onActionClick data to be included in the notification.
-     * @param iconURI             The URI of the icon to be displayed in the notification.
-     * @param imageURI            The URI of the image to be displayed in the notification.
-     * @param badgeURI            The URI of the badge to be displayed in the notification.
-     * @param timestamp           The time stamp to be associated with the notification.
-     * @param renotify            TRUE or FALSE, if the notification behavior is to re-notify the user.
-     * @param requiresInteraction TRUE or FALSE, if the notification requires the user to click to dismiss.
-     * @return The new PushMessage instance.
+     * @param  title               The message to be sent.
+     * @param  body                The body of the message to be sent.
+     * @param  tag                 The tag of the message to be sent.
+     * @param  notificationData    The onActionClick data to be included in the notification.
+     * @param  iconURI             The URI of the icon to be displayed in the notification.
+     * @param  imageURI            The URI of the image to be displayed in the notification.
+     * @param  badgeURI            The URI of the badge to be displayed in the notification.
+     * @param  timestamp           The time stamp to be associated with the notification.
+     * @param  renotify            TRUE or FALSE, if the notification behavior is to re-notify the user.
+     * @param  requiresInteraction TRUE or FALSE, if the notification requires the user to click to dismiss.
+     *
+     * @return                     The new PushMessage instance.
      */
     @SuppressWarnings("checkstyle:parameternumber")
     public static PushMessage of(final String title,

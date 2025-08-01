@@ -21,6 +21,8 @@ public class Key {
     }
 
     /**
+     * The p256dh Diffie-Hellman key.
+     *
      * @return The p256dh Diffie-Hellman key
      */
     public String getP256dh() {
@@ -28,6 +30,8 @@ public class Key {
     }
 
     /**
+     * The auth browser authentication key.
+     *
      * @return The auth browser authentication key
      */
     public String getAuth() {

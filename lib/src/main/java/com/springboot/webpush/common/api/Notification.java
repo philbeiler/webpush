@@ -9,11 +9,11 @@ import org.springframework.util.Assert;
  * services.
  */
 public class Notification {
-    private static final int               VIBRATE_MEDIUM          = 80;
-    private static final int               VIBRATE_SHORT           = 20;
-    private static final int               VIBRATE_LONG            = 180;
-    private static final List<Integer>     DEFAULT_VIBRATE_PATTERN = List.of(VIBRATE_LONG, VIBRATE_SHORT,
-            VIBRATE_MEDIUM, VIBRATE_SHORT, VIBRATE_MEDIUM, VIBRATE_SHORT, VIBRATE_LONG, VIBRATE_SHORT, VIBRATE_LONG);
+    private static final int           VIBRATE_MEDIUM          = 80;
+    private static final int           VIBRATE_SHORT           = 20;
+    private static final int           VIBRATE_LONG            = 180;
+    private static final List<Integer> DEFAULT_VIBRATE_PATTERN = List.of(VIBRATE_LONG, VIBRATE_SHORT, VIBRATE_MEDIUM,
+            VIBRATE_SHORT, VIBRATE_MEDIUM, VIBRATE_SHORT, VIBRATE_LONG, VIBRATE_SHORT, VIBRATE_LONG);
 
     private final String                   title;
     private final String                   body;
@@ -71,13 +71,17 @@ public class Notification {
     }
 
     /**
-     * @return the actions
+     * Returns the actions property.
+     *
+     * @return The actions property.
      */
     public List<NotificationAction> getActions() {
         return actions;
     }
 
     /**
+     * The title of the push message.
+     *
      * @return The title of the push message.
      */
     public String getTitle() {
@@ -85,6 +89,8 @@ public class Notification {
     }
 
     /**
+     * The body of the push message.
+     *
      * @return The body of the push message
      */
     public String getBody() {
@@ -92,6 +98,8 @@ public class Notification {
     }
 
     /**
+     * The vibration pattern to be used my mobile devices.
+     *
      * @return The vibration pattern to be used my mobile devices.
      */
     public List<Integer> getVibrate() {
@@ -99,6 +107,8 @@ public class Notification {
     }
 
     /**
+     * The internal data included with the push message.
+     *
      * @return The internal data included with the push message.
      */
     public NotificationData getData() {
@@ -106,34 +116,44 @@ public class Notification {
     }
 
     /**
-     * @return The icon URI.
+     * Returns the icon property.
+     *
+     * @return The icon property.
      */
     public String getIcon() {
         return icon;
     }
 
     /**
-     * @return The image URI.
+     * Returns the image property.
+     *
+     * @return The image property.
      */
     public String getImage() {
         return image;
     }
 
     /**
-     * @return The tag of the push message.
+     * Returns the tag property.
+     *
+     * @return The tag property.
      */
     public String getTag() {
         return tag;
     }
 
     /**
-     * @return The badge URI.
+     * Returns the badge property.
+     *
+     * @return The badge property.
      */
     public String getBadge() {
         return badge;
     }
 
     /**
+     * Return he time stamp associated with the push message.
+     *
      * @return The time stamp associated with the push message.
      */
     public long getTimestamp() {
@@ -141,15 +161,19 @@ public class Notification {
     }
 
     /**
-     * @return The renotify option, should the notification re-notify the user if not acted upon, true or false.
+     * The renotify option, should the notification re-notify the user if not acted upon, true or false.
+     *
+     * @return The TRUE/FALSE, depending on if re-notify is enabled.
      */
     public boolean isRenotify() {
         return renotify;
     }
 
     /**
-     * @return The requires user interaction indicator. When TRUE, the user must click on the notification; when false,
-     *         the notification will disappear after some predetermined time.
+     * When TRUE, the user must click on the notification; when false, the notification will disappear after some
+     * predetermined time.
+     *
+     * @return The requires user interaction indicator.
      */
     public boolean isRequireInteraction() {
         return requireInteraction;

@@ -31,6 +31,8 @@ public class PushSubscription {
     }
 
     /**
+     * Return the user name.
+     *
      * @return the username
      */
     public String getUsername() {
@@ -38,6 +40,8 @@ public class PushSubscription {
     }
 
     /**
+     * Return the browser specific push notification endpoint URI.
+     *
      * @return The browser specific push notification endpoint URI.
      */
     public String getEndpoint() {
@@ -45,6 +49,8 @@ public class PushSubscription {
     }
 
     /**
+     * Return the expirationTime of the subscription.
+     *
      * @return The expirationTime of the subscription.
      */
     public Integer getExpirationTime() {
@@ -52,6 +58,8 @@ public class PushSubscription {
     }
 
     /**
+     * Return the keys associated with the subscription, used to encrypt the push message.
+     *
      * @return The keys associated with the subscription, used to encrypt the push message.
      */
     public Key getKeys() {
@@ -59,7 +67,9 @@ public class PushSubscription {
     }
 
     /**
-     * @return Returns the internal API {@link Subscription} instance.
+     * Return the internal API {@link Subscription} instance.
+     *
+     * @return The internal API {@link Subscription} instance.
      */
     public Subscription get() {
         return new Subscription(endpoint, new Keys(keys.getP256dh(), keys.getAuth()));

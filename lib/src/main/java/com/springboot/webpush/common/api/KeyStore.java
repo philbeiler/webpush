@@ -29,28 +29,36 @@ public class KeyStore {
     }
 
     /**
-     * @return the privateKey
+     * Returns the privateKey property.
+     *
+     * @return The privateKey property.
      */
     public String getPrivateKey() {
         return privateKey;
     }
 
     /**
-     * @return the publicKey
-     */
-    public String getPublicKey() {
-        return publicKey;
-    }
-
-    /**
-     * @param privateKey the privateKey to set
+     * Sets the value of the privateKey property.
+     *
+     * @param privateKey The value to set the privateKey property.
      */
     public void setPrivateKey(final String privateKey) {
         this.privateKey = privateKey;
     }
 
     /**
-     * @param publicKey the publicKey to set
+     * Returns the publicKey property.
+     *
+     * @return The publicKey property.
+     */
+    public String getPublicKey() {
+        return publicKey;
+    }
+
+    /**
+     * Sets the value of the publicKey property.
+     *
+     * @param publicKey The value to set the publicKey property.
      */
     public void setPublicKey(final String publicKey) {
         this.publicKey = publicKey;

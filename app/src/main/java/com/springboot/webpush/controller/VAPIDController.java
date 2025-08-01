@@ -1,5 +1,7 @@
 package com.springboot.webpush.controller;
 
+import java.util.Optional;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,14 +14,14 @@ import com.springboot.webpush.common.service.KeyStoreService;
 @RestController
 @Deprecated
 public class VAPIDController {
-    private final KeyStoreService keyStoreService;
+    private final Optional<KeyStoreService> keyStoreService;
 
     /**
      * Constructs a new instance of the {@link VAPIDController}.
      *
      * @param keyStoreService The {@link KeyStoreService} instance
      */
-    public VAPIDController(final KeyStoreService keyStoreService) {
+    public VAPIDController(final Optional<KeyStoreService> keyStoreService) {
         super();
         this.keyStoreService = keyStoreService;
     }
@@ -27,7 +29,10 @@ public class VAPIDController {
     @GetMapping("/api/vapid-public")
     ResponseEntity<String> getVapidPublic() {
 
-        final var keyStore = keyStoreService.getKeyStore();
+        if (keyStoreService.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        final var keyStore = keyStoreService.get().getKeyStore();
         if (keyStore.isValid()) {
             return ResponseEntity.ok(keyStore.getPublicKey());
         }

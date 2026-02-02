@@ -1,5 +1,6 @@
 package com.springboot.webpush.service;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.Optional;
@@ -13,8 +14,8 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.springboot.webpush.common.api.KeyStore;
-import com.springboot.webpush.common.api.KeyStoreDiskStoreConfiguration;
 import com.springboot.webpush.common.api.KeyStoreStorageService;
+import com.springboot.webpush.config.KeyStoreDiskStoreConfiguration;
 
 /**
  * The {@link KeyStoreDiskStorageService} is used to preserve the public/private key used to encrypt the push message.
@@ -22,11 +23,10 @@ import com.springboot.webpush.common.api.KeyStoreStorageService;
  */
 @Service
 public class KeyStoreDiskStorageService implements KeyStoreStorageService {
-    private static final Logger                  LOGGER       = LoggerFactory
-            .getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private final ObjectMapper                   objectMapper = new ObjectMapper(new YAMLFactory());
-    private final KeyStoreDiskStoreConfiguration keystoreConfiguration;
+    private final ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
+    private final File         keystoreLocation;
 
     /**
      * Constructs a new {@link KeyStoreDiskStorageService} instance.
@@ -34,17 +34,19 @@ public class KeyStoreDiskStorageService implements KeyStoreStorageService {
      * @param keystoreConfiguration The {@link KeyStoreDiskStoreConfiguration} instance.
      *
      */
-    public KeyStoreDiskStorageService(final KeyStoreDiskStoreConfiguration keystoreConfiguration) {
+    public KeyStoreDiskStorageService(final KeyStoreDiskStoreConfiguration configuration) {
         super();
-        this.keystoreConfiguration = keystoreConfiguration;
+        this.keystoreLocation = configuration.getStorage();
     }
 
     /**
      * Saves the public/private key information to the file system.
      *
-     * @param privateKey The private key.
-     * @param publicKey  The public key.
-     * @return Returns the {@link KeyStore} instance. Optional.empty() is returned if the data could not be stored.
+     * @param  privateKey The private key.
+     * @param  publicKey  The public key.
+     *
+     * @return            Returns the {@link KeyStore} instance. Optional.empty() is returned if the data could not be
+     *                    stored.
      */
     @Override
     public Optional<KeyStore> save(final String privateKey, final String publicKey) {
@@ -63,13 +65,12 @@ public class KeyStoreDiskStorageService implements KeyStoreStorageService {
     @Override
     public Optional<KeyStore> load() {
         try {
-            final var storage = keystoreConfiguration.getStorage();
-            if (!storage.exists()) {
-                LOGGER.error("File does not exist [{}]", storage);
+            if (!keystoreLocation.exists()) {
+                LOGGER.error("File does not exist [{}]", keystoreLocation);
                 return Optional.empty();
             }
-            LOGGER.info("Reading existing key store [{}]", storage.getAbsolutePath());
-            return Optional.of(objectMapper.readValue(storage, KeyStore.class));
+            LOGGER.info("Reading existing key store [{}]", keystoreLocation.getAbsolutePath());
+            return Optional.of(objectMapper.readValue(keystoreLocation, KeyStore.class));
         }
         catch (final IOException e) {
             LOGGER.error("Unable to read file", e);
@@ -80,18 +81,18 @@ public class KeyStoreDiskStorageService implements KeyStoreStorageService {
     /**
      * Save the {@link KeyStore} instance to persistent storage.
      *
-     * @param keyStore The {@link KeyStore} instance to persist.
+     * @param  keyStore The {@link KeyStore} instance to persist.
      *
-     * @return The {@link KeyStore} instance from storage. Optional.empty() is returned if the data could not be saved.
+     * @return          The {@link KeyStore} instance from storage. Optional.empty() is returned if the data could not
+     *                  be saved.
      */
     @Override
     public Optional<KeyStore> save(final KeyStore keyStore) {
         Assert.notNull(keyStore, "Keystore cannot be null");
         final var writer = objectMapper.writer(new DefaultPrettyPrinter());
         try {
-            final var storage = keystoreConfiguration.getStorage();
-            writer.writeValue(storage, keyStore);
-            LOGGER.info("Generating a new key store [{}]", storage.getAbsolutePath());
+            writer.writeValue(keystoreLocation, keyStore);
+            LOGGER.info("Generating a new key store [{}]", keystoreLocation.getAbsolutePath());
             return Optional.of(keyStore);
         }
         catch (final IOException e) {

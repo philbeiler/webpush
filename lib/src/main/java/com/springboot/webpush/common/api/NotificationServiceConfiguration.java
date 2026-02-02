@@ -8,6 +8,8 @@ import com.springboot.webpush.common.service.NotificationService;
 public interface NotificationServiceConfiguration {
 
     /**
+     * Return the email address of external administrator.
+     *
      * @return The emailAddress of external administrator.
      */
     String getAdminEmailAddress();

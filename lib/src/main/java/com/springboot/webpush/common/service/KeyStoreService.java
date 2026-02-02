@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
 
 import com.springboot.webpush.common.api.KeyStore;
@@ -16,9 +17,9 @@ import com.springboot.webpush.common.util.KeyStoreGenerator;
  * to encrypt the push messages.
  */
 @Service
+@ConditionalOnBean(KeyStoreStorageService.class)
 public class KeyStoreService {
     private static final Logger          LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final KeyStore               keyStore;
     private final KeyStoreStorageService storageService;
 
     /**
@@ -29,24 +30,23 @@ public class KeyStoreService {
     public KeyStoreService(final KeyStoreStorageService storageService) {
         super();
         this.storageService = storageService;
-
-        var ks = storageService.load();
-        if (ks.isEmpty()) {
-            ks = generate();
-        }
-
-        this.keyStore = ks.orElse(new KeyStore());
-        if (keyStore.isInvalid()) {
-            LOGGER.error("Unable to generate KeyStore, nothing is going to work!");
-        }
     }
 
     /**
+     * Return the {@link KeyStore} instance. A new one will be created if not found.
      *
-     * @return Returns the {@link KeyStore} instance.
+     * @return The {@link KeyStore} instance.
      */
     public KeyStore getKeyStore() {
-        return keyStore;
+        var keyStore = storageService.load();
+        if (keyStore.isEmpty()) {
+            keyStore = generate();
+        }
+
+        if (keyStore.isEmpty() || keyStore.get().isInvalid()) {
+            LOGGER.error("Unable to generate KeyStore, nothing is going to work!");
+        }
+        return keyStore.orElse(new KeyStore());
     }
 
     /**

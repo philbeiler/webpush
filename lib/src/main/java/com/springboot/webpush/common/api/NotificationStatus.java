@@ -20,9 +20,10 @@ public final class NotificationStatus {
     /**
      * Constructs a new instance, and determines the success/failure based on the provided counts.
      *
-     * @param success The number of successful interactions.
-     * @param failed  The number of failed interactions.
-     * @return A new {@link NotificationStatus} instance.
+     * @param  success The number of successful interactions.
+     * @param  failed  The number of failed interactions.
+     *
+     * @return         A new {@link NotificationStatus} instance.
      */
     public static NotificationStatus of(final int success, final int failed) {
         var              error   = false;
@@ -42,8 +43,9 @@ public final class NotificationStatus {
      * Convenience method to generate an informational (non-error) {@link NotificationStatus} instance that there we no
      * messages to send.
      *
-     * @param message The message to be returned as the status.
-     * @return A new {@link NotificationStatus} instance.
+     * @param  message The message to be returned as the status.
+     *
+     * @return         A new {@link NotificationStatus} instance.
      */
     public static NotificationStatus info(final String message) {
         LOGGER.info(message);
@@ -53,8 +55,9 @@ public final class NotificationStatus {
     /**
      * Convenience method to generate a {@link NotificationStatus} instance to signal an error.
      *
-     * @param message The message to be returned as the error status.
-     * @return A new {@link NotificationStatus} instance.
+     * @param  message The message to be returned as the error status.
+     *
+     * @return         A new {@link NotificationStatus} instance.
      */
 
     public static NotificationStatus error(final String message) {
@@ -87,13 +90,17 @@ public final class NotificationStatus {
     }
 
     /**
-     * @return The error indicator, TRUE indicated there was an error, FALSE implies no errors were encountered.
+     * Return TRUE indicated there was an error, FALSE implies no errors were encountered.
+     *
+     * @return The error indicator.
      */
     public boolean isError() {
         return error;
     }
 
     /**
+     * Return the number of successful web push server interactions.
+     *
      * @return The number of successful web push server interactions.
      */
     public int getSuccessCount() {
@@ -101,6 +108,8 @@ public final class NotificationStatus {
     }
 
     /**
+     * Return the number of failed web push server interactions.
+     *
      * @return The number of failed web push server interactions.
      */
     public int getFailedCount() {
@@ -108,6 +117,8 @@ public final class NotificationStatus {
     }
 
     /**
+     * Return the associated {@link NotificationStatus} message, optionally returned.
+     *
      * @return The associated {@link NotificationStatus} message, optionally returned.
      */
     public Optional<String> getMessage() {

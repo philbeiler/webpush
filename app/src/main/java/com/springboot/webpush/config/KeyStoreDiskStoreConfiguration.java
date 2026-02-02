@@ -17,8 +17,7 @@ import jakarta.annotation.PostConstruct;
  */
 @Configuration
 @ConfigurationProperties(prefix = "keystore")
-public class KeyStoreDiskStoreConfiguration
-        implements com.springboot.webpush.common.api.KeyStoreDiskStoreConfiguration {
+public class KeyStoreDiskStoreConfiguration {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final File          storage;
 
@@ -44,7 +43,6 @@ public class KeyStoreDiskStoreConfiguration
     /**
      * @return The storageDirectory, fully qualified path.
      */
-    @Override
     public File getStorage() {
         return storage;
     }

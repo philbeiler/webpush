@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springboot.webpush.common.api.NotificationServiceConfiguration;
 import com.springboot.webpush.common.api.NotificationStatus;
 import com.springboot.webpush.common.api.PushMessage;
@@ -24,6 +23,8 @@ import nl.martijndwars.webpush.Encoding;
 import nl.martijndwars.webpush.Notification;
 import nl.martijndwars.webpush.PushService;
 import nl.martijndwars.webpush.Urgency;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * The {@link NotificationService} is responsible for sending a {@link PushMessage} to all of the current application
@@ -32,25 +33,26 @@ import nl.martijndwars.webpush.Urgency;
 @Service
 @ConditionalOnBean(NotificationServiceEnabled.class)
 public class NotificationService {
-    private static final int    HTTP_REDIRECT_CODES = 300;
-    private static final int    HTTP_SUCCESS_CODES  = 200;
-    private static final Logger LOGGER              = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private final PushService  pushService;
-    private final ObjectMapper objectMapper;
+    private static final int HTTP_REDIRECT_CODES = 300;
+    private static final int HTTP_SUCCESS_CODES  = 200;
+
+    private final PushService pushService;
+    private final JsonMapper  jsonMapper;
 
     /**
      * Constructs a new instance of the {@link NotificationService}.
      *
      * @param keystoreService                  The {@link KeyStoreService} instance
-     * @param objectMapper                     The {@link ObjectMapper} instance
+     * @param jsonMapper                       The {@link ObjectMapper} instance
      * @param notificationServiceConfiguration The {@link NotificationServiceConfiguration} instance
      */
     public NotificationService(final KeyStoreService keystoreService,
-                               final ObjectMapper objectMapper,
+                               final JsonMapper jsonMapper,
                                final NotificationServiceConfiguration notificationServiceConfiguration) {
         super();
-        this.objectMapper = objectMapper;
+        this.jsonMapper = jsonMapper;
 
         PushService aPushService = null;
         try {
@@ -74,7 +76,7 @@ public class NotificationService {
      * @param  message       The {@link PushMessage} to send
      * @param  urgency       The {@link Urgency} of the message
      *
-     * @return               A {@link NotificationStatus} instance, success or fail metrics
+     * @return               A {@link NotificationStatus} instance, success or fail metrics =======
      */
     public NotificationStatus notifyAll(final Collection<PushSubscription> subscriptions,
                                         final PushMessage message,
@@ -119,7 +121,7 @@ public class NotificationService {
             // Where notification is defined here:
             // https://developer.mozilla.org/en-US/docs/Web/API/Notification
 
-            final var content = objectMapper.writeValueAsString(message);
+            final var content = jsonMapper.writeValueAsString(message);
             LOGGER.info("Content [{}]", content);
             final var notification = new Notification(subscription.get(), content, urgency);
             final var rc           = pushService.send(notification, Encoding.AES128GCM);

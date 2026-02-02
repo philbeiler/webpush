@@ -7,7 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * The {@link KeyStoreGeneratorApplication} creates new keystores (public/private) that are used to encrypt the
@@ -27,10 +27,10 @@ public class KeyStoreGeneratorApplication {
 
     /**
      *
-     * @return Jackson {@link ObjectMapper} instance used for serializing beans to and from JSON.
+     * @return Jackson {@link JsonMapper} instance used for serializing beans to and from JSON.
      */
     @Bean
-    ObjectMapper objectMapper() {
-        return new ObjectMapper();
+    JsonMapper objectMapper() {
+        return new JsonMapper();
     }
 }

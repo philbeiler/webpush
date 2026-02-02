@@ -9,24 +9,26 @@ repositories {
 }
 
 dependencies {
+
+    api platform("tools.jackson:jackson-bom:3.0.4")
+    api "tools.jackson.core:jackson-databind"
     api 'nl.martijndwars:web-push:5.1.2'
     api 'org.bouncycastle:bcprov-jdk18on:1.80'
-    api 'com.fasterxml.jackson.core:jackson-databind:2.19.0'
-    api 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.19.0'
 
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:4.0.2"))
     implementation 'javax.servlet:servlet-api:2.5'
-    implementation 'org.slf4j:slf4j-api:2.0.17'
+    implementation 'org.slf4j:slf4j-api'
     implementation 'jakarta.annotation:jakarta.annotation-api:3.0.0'
     implementation 'org.bitbucket.b_c:jose4j:0.9.6'
     implementation 'org.apache.httpcomponents:httpcore:4.4.15'
 
-    implementation 'org.springframework:spring-context:6.2.9'
-    implementation 'org.springframework.boot:spring-boot:3.5.4'
-    implementation 'org.springframework.boot:spring-boot-autoconfigure:3.5.4'
-    
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
-    testRuntimeOnly 'org.slf4j:slf4j-simple:2.0.17'
+    implementation 'org.springframework:spring-context'
+    implementation 'org.springframework.boot:spring-boot'
+    implementation 'org.springframework.boot:spring-boot-autoconfigure'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    testRuntimeOnly 'org.slf4j:slf4j-simple'
     testRuntimeOnly 'org.bouncycastle:bcprov-jdk18on:1.80'
 
     checkstyle "com.puppycrawl.tools:checkstyle:${checkstyle.toolVersion}"
@@ -40,7 +42,7 @@ checkstyle {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(25)
     }
 }
 

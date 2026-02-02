@@ -12,10 +12,11 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import com.springboot.webpush.common.api.KeyStoreStorageService;
 import com.springboot.webpush.common.util.KeyStoreGenerator;
 import com.springboot.webpush.config.KeyStoreDiskStoreConfiguration;
 import com.springboot.webpush.service.KeyStoreDiskStorageService;
+
+import tools.jackson.dataformat.yaml.YAMLMapper;
 
 /**
  *
@@ -33,8 +34,8 @@ class StorageServiceTest {
 
     @Test
     void create() {
-        final KeyStoreStorageService storageService = new KeyStoreDiskStorageService(
-                new KeyStoreDiskStoreConfiguration(PATH, NEW_KEYSTORE_NAME));
+        final var config         = new KeyStoreDiskStoreConfiguration(PATH, NEW_KEYSTORE_NAME);
+        final var storageService = new KeyStoreDiskStorageService(config, new YAMLMapper());
         assertNotNull(storageService);
         var keys = storageService.load();
         assertTrue(keys.isEmpty());

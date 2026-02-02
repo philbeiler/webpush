@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '3.5.4'
+    id 'org.springframework.boot' version '4.0.2'
 	id 'io.spring.dependency-management' version '1.1.7'
 	id 'java'
 	id 'checkstyle'
@@ -19,22 +19,21 @@ dependencies {
 testing {
     suites {
         test {
-            useJUnitJupiter('5.10.2')
+            useJUnitJupiter()
         }
     }
 }
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(25)
     }
 }
 
 tasks.named("bootJar") {
-	launchScript()
 }
 
 checkstyle {
-    toolVersion '7.8.1'
+    toolVersion '10.25.0'
     configFile rootProject.file("config/checkstyle/checkstyle.xml")
 }

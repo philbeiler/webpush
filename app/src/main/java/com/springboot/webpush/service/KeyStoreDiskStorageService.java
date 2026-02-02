@@ -1,7 +1,6 @@
 package com.springboot.webpush.service;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.Optional;
 
@@ -10,12 +9,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.springboot.webpush.common.api.KeyStore;
 import com.springboot.webpush.common.api.KeyStoreStorageService;
 import com.springboot.webpush.config.KeyStoreDiskStoreConfiguration;
+
+import tools.jackson.core.JacksonException;
+import tools.jackson.dataformat.yaml.YAMLMapper;
 
 /**
  * The {@link KeyStoreDiskStorageService} is used to preserve the public/private key used to encrypt the push message.
@@ -24,19 +23,21 @@ import com.springboot.webpush.config.KeyStoreDiskStoreConfiguration;
 @Service
 public class KeyStoreDiskStorageService implements KeyStoreStorageService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
-    private final ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
-    private final File         keystoreLocation;
+    private final File          storage;
+    private final YAMLMapper    yamlMapper;
 
     /**
      * Constructs a new {@link KeyStoreDiskStorageService} instance.
      *
      * @param keystoreConfiguration The {@link KeyStoreDiskStoreConfiguration} instance.
+     * @param yamlMapper            The {@link YAMLMapper} instance.
      *
      */
-    public KeyStoreDiskStorageService(final KeyStoreDiskStoreConfiguration configuration) {
+    public KeyStoreDiskStorageService(final KeyStoreDiskStoreConfiguration keystoreConfiguration,
+                                      final YAMLMapper yamlMapper) {
         super();
-        this.keystoreLocation = configuration.getStorage();
+        this.storage    = keystoreConfiguration.getStorage();
+        this.yamlMapper = yamlMapper;
     }
 
     /**
@@ -65,14 +66,15 @@ public class KeyStoreDiskStorageService implements KeyStoreStorageService {
     @Override
     public Optional<KeyStore> load() {
         try {
-            if (!keystoreLocation.exists()) {
-                LOGGER.error("File does not exist [{}]", keystoreLocation);
+            if (!storage.exists()) {
+                LOGGER.error("File does not exist [{}]", storage);
                 return Optional.empty();
             }
-            LOGGER.info("Reading existing key store [{}]", keystoreLocation.getAbsolutePath());
-            return Optional.of(objectMapper.readValue(keystoreLocation, KeyStore.class));
+            LOGGER.info("Reading existing key store [{}]", storage.getAbsolutePath());
+            return Optional.of(yamlMapper.readValue(storage, KeyStore.class));
+
         }
-        catch (final IOException e) {
+        catch (final JacksonException e) {
             LOGGER.error("Unable to read file", e);
         }
         return Optional.empty();
@@ -89,13 +91,13 @@ public class KeyStoreDiskStorageService implements KeyStoreStorageService {
     @Override
     public Optional<KeyStore> save(final KeyStore keyStore) {
         Assert.notNull(keyStore, "Keystore cannot be null");
-        final var writer = objectMapper.writer(new DefaultPrettyPrinter());
+        final var writer = yamlMapper.writerWithDefaultPrettyPrinter();
         try {
-            writer.writeValue(keystoreLocation, keyStore);
-            LOGGER.info("Generating a new key store [{}]", keystoreLocation.getAbsolutePath());
+            writer.writeValue(storage, keyStore);
+            LOGGER.info("Generating a new key store [{}]", storage.getAbsolutePath());
             return Optional.of(keyStore);
         }
-        catch (final IOException e) {
+        catch (final JacksonException e) {
             LOGGER.error("Unable to write file", e);
         }
         return Optional.empty();
